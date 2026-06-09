@@ -14,6 +14,7 @@
   },
   "public": false,
   "category": {
+    "query": "category",
     "movie": [
       {
         "id": "movie",
@@ -48,18 +49,17 @@
       "method": "GET",
       "path": "/api/torrent/list",
       "params": {
-        "page": ["0"],
+        "page": ["{page}"],
         "page_size": ["100"],
         "sort": ["created_at DESC"],
-        "query": ["{keyword}"],
-        "category": ["{category}"]
+        "query": ["{keyword}"]
       },
       "list": {
         "selector": "data.torrents"
       },
       "fields": {
         "id": {
-          "selector": "id"
+          "selector": "uuid"
         },
         "category": {
           "selector": "type"
@@ -68,7 +68,7 @@
           "selector": "title"
         },
         "details": {
-          "selector": "id",
+          "selector": "uuid",
           "filters": [
             {
               "name": "append_left",
@@ -77,15 +77,15 @@
           ]
         },
         "download": {
-          "selector": "info_hash",
+          "selector": "uuid",
           "filters": [
             {
               "name": "append_left",
-              "args": "/download/"
+              "args": "/api/torrent/"
             },
             {
               "name": "append_right",
-              "args": "/{passkey}"
+              "args": "/download/{passkey}"
             }
           ]
         },
@@ -143,11 +143,10 @@
           ]
         },
         "signed_in": {
-          "selector": "code",
           "filters": [
             {
-              "name": "eq",
-              "args": "0"
+              "name": "constant",
+              "args": "false"
             }
           ]
         },

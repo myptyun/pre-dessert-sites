@@ -196,6 +196,18 @@
         "action": [
           "sign_in"
         ]
+      },
+      "fields": {
+        "signed_in": {
+          "selector": "*",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "regex",
+              "args": "(签到成功|签到已得|已签到|已签|簽到已得|成功)"
+            }
+          ]
+        }
       }
     }
   }
