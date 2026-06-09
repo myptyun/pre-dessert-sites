@@ -3,7 +3,7 @@
   "name": "Rousi",
   "domain": "https://rousi.pro",
   "encoding": "UTF-8",
-  "schema": "NexusPHP",
+  "schema": "rousi",
   "reuse_schema": "NexusPHP",
   "required": {
     "cookie": false,
