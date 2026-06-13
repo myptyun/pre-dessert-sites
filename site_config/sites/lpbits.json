@@ -5,15 +5,35 @@
   "encoding": "UTF-8",
   "public": false,
   "schema": "NexusPHP",
-  "required": { "cookie": true, "sign_in": false },
-  "meta": { "has_free": true, "has_2x_free": true, "has_hr": true, "has_cover": true },
+  "required": {
+    "cookie": true,
+    "sign_in": false
+  },
+  "meta": {
+    "has_free": true,
+    "has_2x_free": true,
+    "has_hr": true,
+    "has_cover": true
+  },
   "category": {
     "movie": [
-      { "id": 401, "cat": "Movies", "desc": "MOVIES" },
-      { "id": 403, "cat": "Movies", "desc": "MUSIC VIDEOS" }
+      {
+        "id": 401,
+        "cat": "Movies",
+        "desc": "MOVIES"
+      },
+      {
+        "id": 403,
+        "cat": "Movies",
+        "desc": "MUSIC VIDEOS"
+      }
     ],
     "tv": [
-      { "id": 402, "cat": "TV/Documentary", "desc": "DOC." }
+      {
+        "id": 402,
+        "cat": "TV/Documentary",
+        "desc": "DOC."
+      }
     ]
   },
   "requests": {
@@ -29,7 +49,15 @@
       "fields": {
         "id": {
           "selector": "//table[@id='info_block']//a[contains(@href,'userdetails.php?id=') and contains(@class,'User_Name')]/@href",
-          "filters": [ { "name": "re_search", "args": ["id=(\\d+)", 1] } ]
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
+          ]
         },
         "name": {
           "selector": "//table[@id='info_block']//a[contains(@href,'userdetails') and contains(@class,'User_Name')]//b"
@@ -37,33 +65,89 @@
         "uploaded": {
           "selector": "//table[@id='info_block']",
           "filters": [
-            { "name": "re_search", "args": ["Uploaded:.*?([\\d.,]+\\s*[KMGTP]?i?B)", 1] },
-            { "name": "byte_size" }
+            {
+              "name": "re_search",
+              "args": [
+                "Uploaded:.*?([\\d.,]+\\s*[KMGTP]?i?B)",
+                1
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "downloaded": {
           "selector": "//table[@id='info_block']",
           "filters": [
-            { "name": "re_search", "args": ["Downloaded:.*?([\\d.,]+\\s*[KMGTP]?i?B)", 1] },
-            { "name": "byte_size" }
+            {
+              "name": "re_search",
+              "args": [
+                "Downloaded:.*?([\\d.,]+\\s*[KMGTP]?i?B)",
+                1
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "ratio": {
           "selector": "//table[@id='info_block']",
           "filters": [
-            { "name": "re_search", "args": ["Ratio:\\s*(Inf\\.?|[\\d.]+)", 1] },
-            { "name": "strip" },
-            { "name": "replace", "args": [",", ""] },
-            { "name": "replace", "args": ["Inf.", "0"] },
-            { "name": "replace", "args": ["Inf", "0"] }
+            {
+              "name": "re_search",
+              "args": [
+                "Ratio:\\s*(Inf\\.?|[\\d.]+)",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "Inf.",
+                "0"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "Inf",
+                "0"
+              ]
+            }
           ]
         },
         "bonus": {
           "selector": "//table[@id='info_block']",
           "filters": [
-            { "name": "re_search", "args": ["Bonus.*?]:\\s*([\\d.,]+)", 1] },
-            { "name": "strip" },
-            { "name": "replace", "args": [",", ""] }
+            {
+              "name": "re_search",
+              "args": [
+                "Bonus.*?]:\\s*([\\d.,]+)",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            }
           ]
         }
       }
@@ -75,47 +159,174 @@
       "fields": {
         "level": {
           "selector": "//td[contains(@class,'rowhead') and contains(.,'Class')]/following-sibling::td[1]/img/@title",
-          "filters": [ { "name": "strip" } ]
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "level_icon": {
           "selector": "//td[contains(@class,'rowhead') and contains(.,'Class')]/following-sibling::td[1]/img/@src"
         },
         "join_at": {
           "selector": "//td[contains(@class,'rowhead') and contains(.,'Join') and contains(.,'date')]/following-sibling::td[1]//span/@title",
-          "filters": [ { "name": "timestamp" }, { "name": "timezone", "args": ["+7"] } ]
+          "filters": [
+            {
+              "name": "timestamp"
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+7"
+              ]
+            }
+          ]
         },
         "last_accessed": {
           "selector": "//td[contains(@class,'rowhead') and contains(.,'Last') and contains(.,'seen') and not(contains(.,'Location'))]/following-sibling::td[1]//span/@title",
-          "filters": [ { "name": "timestamp" }, { "name": "timezone", "args": ["+7"] } ]
+          "filters": [
+            {
+              "name": "timestamp"
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+7"
+              ]
+            }
+          ]
         }
       }
     },
     "search": {
       "fields": {
-        "labels": { "selector": "td.embedded > span[title]", "array": true },
-        "description": { "selector": "td.embedded", "remove": "span,a,img,font,b,br", "contents": -1 },
-        "hr_days": { "filters": [{ "name": "constant", "args": ["1"] }] }
+        "labels": {
+          "selector": "td.embedded > span[title]",
+          "array": true
+        },
+        "description": {
+          "selector": "td.embedded",
+          "remove": "span,a,img,font,b,br",
+          "contents": -1
+        },
+        "hr_days": {
+          "filters": [
+            {
+              "name": "constant",
+              "args": [
+                "1"
+              ]
+            }
+          ]
+        }
       }
     },
     "seeding_statistics": {
       "parser": "XPath",
       "method": "GET",
       "path": "/userdetails.php?id={userId}",
-      "disabled_extends": { "list": true },
+      "disabled_extends": {
+        "list": true
+      },
       "fields": {
         "count": {
           "selector": "//img[contains(@alt,'seeding') or contains(@title,'Seed')]/following-sibling::text()",
           "filters": [
-            { "name": "strip" },
-            { "name": "re_search", "args": ["(\\d+)", 1] }
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
           ]
         },
         "size": {
           "selector": "//td[contains(@class,'rowhead') and (contains(.,'Seeding') or contains(.,'seed'))]/following-sibling::td[1]",
-          "filters": [ { "name": "strip" }, { "name": "byte_size" } ]
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
         }
       }
     },
-    "my_hr": { "path": "/myhr.php?status=1" }
+    "my_hr": {
+      "path": "/myhr.php?status=1"
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/messages.php",
+      "params": {
+        "action": [
+          "viewmailbox"
+        ],
+        "box": [
+          "1"
+        ],
+        "page": [
+          "{page}"
+        ]
+      },
+      "list": {
+        "selector": "//table//tr[.//a[contains(@href,'action=viewmessage')]]"
+      },
+      "fields": {
+        "title": {
+          "selector": ".//a[contains(@href,'action=viewmessage')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": ".//a[contains(@href,'action=viewmessage')][1]/@href"
+        },
+        "id": {
+          "selector": ".//a[contains(@href,'action=viewmessage')][1]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "sender": {
+          "selector": "./td[1]//a | ./td[2]//a[not(contains(@href,'action=viewmessage'))][1] | .//a[contains(@href,'userdetails') or contains(@href,'user.php')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": "./td[last()]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "unread": {
+          "selector": ".//*[contains(@class,'unread') or contains(@class,'new') or contains(@src,'unread') or contains(@alt,'Unread') or contains(@style,'bold')]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        }
+      }
+    }
   }
 }

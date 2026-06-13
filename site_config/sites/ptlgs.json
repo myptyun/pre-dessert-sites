@@ -90,7 +90,10 @@
           "filters": [
             {
               "name": "re_search",
-              "args": ["(\\d+)", 1]
+              "args": [
+                "(\\d+)",
+                1
+              ]
             }
           ]
         },
@@ -99,13 +102,84 @@
           "filters": [
             {
               "name": "re_search",
-              "args": ["总大小：(.*)", 1]
+              "args": [
+                "总大小：(.*)",
+                1
+              ]
             },
             {
               "name": "strip"
             },
             {
               "name": "byte_size"
+            }
+          ]
+        }
+      }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/messages.php",
+      "params": {
+        "action": [
+          "viewmailbox"
+        ],
+        "box": [
+          "1"
+        ],
+        "page": [
+          "{page}"
+        ]
+      },
+      "list": {
+        "selector": "//table//tr[.//a[contains(@href,'action=viewmessage')]]"
+      },
+      "fields": {
+        "title": {
+          "selector": ".//a[contains(@href,'action=viewmessage')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": ".//a[contains(@href,'action=viewmessage')][1]/@href"
+        },
+        "id": {
+          "selector": ".//a[contains(@href,'action=viewmessage')][1]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "sender": {
+          "selector": "./td[1]//a | ./td[2]//a[not(contains(@href,'action=viewmessage'))][1] | .//a[contains(@href,'userdetails') or contains(@href,'user.php')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": "./td[last()]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "unread": {
+          "selector": ".//*[contains(@class,'unread') or contains(@class,'new') or contains(@src,'unread') or contains(@alt,'Unread') or contains(@style,'bold')]",
+          "filters": [
+            {
+              "name": "not_blank"
             }
           ]
         }

@@ -16,8 +16,20 @@
     "has_cover": true
   },
   "category": {
-    "movie": [{ "id": 1, "cat": "Movies", "desc": "Movies" }],
-    "tv": [{ "id": 2, "cat": "TV", "desc": "TV" }]
+    "movie": [
+      {
+        "id": 1,
+        "cat": "Movies",
+        "desc": "Movies"
+      }
+    ],
+    "tv": [
+      {
+        "id": 2,
+        "cat": "TV",
+        "desc": "TV"
+      }
+    ]
   },
   "requests": {
     "favicon": {
@@ -25,7 +37,6 @@
       "method": "GET",
       "path": "/favicon.png"
     },
-
     "notice": {
       "parser": "XPath",
       "method": "GET",
@@ -37,12 +48,22 @@
         "id": {
           "selector": ".//a[contains(@class, 'article-preview__link')]/@href",
           "filters": [
-            { "name": "re_search", "args": ["/articles/(\\d+)", 1] }
+            {
+              "name": "re_search",
+              "args": [
+                "/articles/(\\d+)",
+                1
+              ]
+            }
           ]
         },
         "title": {
           "selector": ".//h2[contains(@class, 'article-preview__title')]/a",
-          "filters": [{ "name": "strip" }]
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "link": {
           "selector": ".//a[contains(@class, 'article-preview__link')]/@href"
@@ -52,17 +73,41 @@
             {
               "selector": ".//time[contains(@class, 'article-preview__published-date')]/@datetime",
               "filters": [
-                { "name": "strip" },
-                { "name": "timestamp", "args": ["2006-01-02 15:04:05"] },
-                { "name": "timezone", "args": ["+8"] }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "timestamp",
+                  "args": [
+                    "2006-01-02 15:04:05"
+                  ]
+                },
+                {
+                  "name": "timezone",
+                  "args": [
+                    "+8"
+                  ]
+                }
               ]
             },
             {
               "selector": ".//time[contains(@class, 'article-preview__published-date')]/@title",
               "filters": [
-                { "name": "strip" },
-                { "name": "timestamp", "args": ["2006-01-02 15:04:05"] },
-                { "name": "timezone", "args": ["+8"] }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "timestamp",
+                  "args": [
+                    "2006-01-02 15:04:05"
+                  ]
+                },
+                {
+                  "name": "timezone",
+                  "args": [
+                    "+8"
+                  ]
+                }
               ]
             }
           ]
@@ -72,11 +117,14 @@
         },
         "content": {
           "selector": ".//p[contains(@class, 'article-preview__content')]",
-          "filters": [{ "name": "strip" }]
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         }
       }
     },
-
     "user_basic_info": {
       "parser": "XPath",
       "method": "GET",
@@ -85,24 +133,41 @@
         "is_login": {
           "selector": "//form[contains(@action,'logout')]//button",
           "filters": [
-            { "name": "re_search", "args": ["(注销|Logout)", 0] },
-            { "name": "replace", "args": ["注销", "true"] },
-            { "name": "replace", "args": ["Logout", "true"] }
-          ]
-        },
-        "id": {
-          "any": [
             {
-              "selector": "//a[contains(@class,'top-nav__username--highresolution')]/@href",
-              "filters": [
-                { "name": "re_search", "args": ["/users/([^/]+)", 1] }
+              "name": "re_search",
+              "args": [
+                "(注销|Logout)",
+                0
               ]
             },
             {
-              "selector": "//a[contains(@href,'/users/') and not(contains(@href,'/users/') and contains(@href,'/uploads')) and not(contains(@href,'/users/') and contains(@href,'/downloads'))]/@href",
-              "filters": [
-                { "name": "re_search", "args": ["/users/([^/]+)", 1] }
+              "name": "replace",
+              "args": [
+                "注销",
+                "true"
               ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "Logout",
+                "true"
+              ]
+            }
+          ]
+        },
+        "id": {
+          "selector": "//a[contains(@href,'/users/') and (contains(@href,'/conversations') or contains(@class,'username') or contains(@class,'user'))]/@href | //meta[@name='user-login']/@content | //a[contains(@href,'/users/')]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "/users/([^/?#]+)/",
+                1
+              ]
+            },
+            {
+              "name": "strip"
             }
           ]
         },
@@ -110,17 +175,31 @@
           "any": [
             {
               "selector": "//a[contains(@class,'top-nav__username--highresolution')]//span[contains(@class,'text-bold')]//text()[normalize-space()]",
-              "filters": [{ "name": "strip" }]
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
             },
             {
               "selector": "//a[contains(@class,'top-nav__username--highresolution')]/@href",
               "filters": [
-                { "name": "re_search", "args": ["/users/([^/]+)", 1] }
+                {
+                  "name": "re_search",
+                  "args": [
+                    "/users/([^/]+)",
+                    1
+                  ]
+                }
               ]
             },
             {
               "selector": "//a[contains(@href,'/users/') and not(contains(@href,'/uploads')) and not(contains(@href,'/downloads'))]/text()",
-              "filters": [{ "name": "strip" }]
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
             }
           ]
         },
@@ -128,11 +207,25 @@
           "any": [
             {
               "selector": "//li[contains(@class,'ratio-bar__uploaded')]/a/text()[normalize-space()]",
-              "filters": [{ "name": "strip" }, { "name": "byte_size" }]
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
             },
             {
               "selector": "//li[contains(@class,'uploaded')]/a/text()[normalize-space()]",
-              "filters": [{ "name": "strip" }, { "name": "byte_size" }]
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
             }
           ]
         },
@@ -140,11 +233,25 @@
           "any": [
             {
               "selector": "//li[contains(@class,'ratio-bar__downloaded')]/a/text()[normalize-space()]",
-              "filters": [{ "name": "strip" }, { "name": "byte_size" }]
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
             },
             {
               "selector": "//li[contains(@class,'downloaded')]/a/text()[normalize-space()]",
-              "filters": [{ "name": "strip" }, { "name": "byte_size" }]
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
             }
           ]
         },
@@ -153,19 +260,59 @@
             {
               "selector": "//li[contains(@class,'ratio-bar__ratio')]/a/text()[normalize-space()]",
               "filters": [
-                { "name": "strip" },
-                { "name": "replace", "args": ["\u00a0", " "] },
-                { "name": "replace", "args": [",", ""] },
-                { "name": "re_search", "args": ["([\\d.]+)", 1] }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d.]+)",
+                    1
+                  ]
+                }
               ]
             },
             {
               "selector": "//li[contains(@class,'ratio')]/a/text()[normalize-space()]",
               "filters": [
-                { "name": "strip" },
-                { "name": "replace", "args": ["\u00a0", " "] },
-                { "name": "replace", "args": [",", ""] },
-                { "name": "re_search", "args": ["([\\d.]+)", 1] }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d.]+)",
+                    1
+                  ]
+                }
               ]
             }
           ]
@@ -175,23 +322,44 @@
             {
               "selector": "//li[contains(@class,'ratio-bar__points')]/a/text()[normalize-space()]",
               "filters": [
-                { "name": "strip" },
-                { "name": "replace", "args": ["\u00a0", ""] },
-                { "name": "replace", "args": [",", ""] }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    ""
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                }
               ]
             },
             {
               "selector": "//li[contains(@class,'bonus')]/a/text()[normalize-space()]",
               "filters": [
-                { "name": "strip" },
-                { "name": "replace", "args": [",", ""] }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                }
               ]
             }
           ]
         }
       }
     },
-
     "user_details": {
       "parser": "XPath",
       "method": "GET",
@@ -201,15 +369,27 @@
           "any": [
             {
               "selector": "//a[contains(@class,'user-tag__link')]/@title",
-              "filters": [{ "name": "strip" }]
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
             },
             {
               "selector": "//span[contains(@class,'badge') or contains(@class,'user-class')]/text()",
-              "filters": [{ "name": "strip" }]
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
             },
             {
               "selector": "//span[contains(@class,'badge-user')]//strong/text()",
-              "filters": [{ "name": "strip" }]
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
             }
           ]
         },
@@ -228,41 +408,80 @@
         },
         "join_at": {
           "selector": "//time[@datetime][1]/@datetime",
-          "filters": [{ "name": "timestamp" }, { "name": "timezone", "args": ["+8"] }]
+          "filters": [
+            {
+              "name": "timestamp"
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+8"
+              ]
+            }
+          ]
         },
         "last_accessed": {
           "selector": "//time[@datetime][last()]/@datetime",
-          "filters": [{ "name": "timestamp" }, { "name": "timezone", "args": ["+8"] }]
+          "filters": [
+            {
+              "name": "timestamp"
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+8"
+              ]
+            }
+          ]
         }
       }
     },
-
     "seeding_statistics": {
       "parser": "XPath",
       "method": "GET",
       "path": "/users/{userId}",
-      "disabled_extends": { "list": true },
+      "disabled_extends": {
+        "list": true
+      },
       "fields": {
         "count": {
           "any": [
             {
               "selector": "//dt[contains(.,'Total Seeding') or contains(.,'总做种数量')]/following-sibling::dd[1]",
               "filters": [
-                { "name": "strip" },
-                { "name": "replace", "args": [",", ""] }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                }
               ]
             },
             {
               "selector": "//li[contains(@class,'ratio-bar__seeding')]/a/text()[normalize-space()]",
               "filters": [
-                { "name": "strip" }
+                {
+                  "name": "strip"
+                }
               ]
             },
             {
               "selector": "//dt[contains(.,'Seeding')]/following-sibling::dd[1]",
               "filters": [
-                { "name": "strip" },
-                { "name": "replace", "args": [",", ""] }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                }
               ]
             }
           ]
@@ -272,38 +491,75 @@
             {
               "selector": "//dt[contains(.,'Seeding Size') or contains(.,'做种体积')]/following-sibling::dd[1]",
               "filters": [
-                { "name": "strip" },
-                { "name": "replace", "args": ["\u00a0", " "] },
-                { "name": "byte_size" }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "byte_size"
+                }
               ]
             },
             {
               "selector": "//abbr[contains(@title,'Seeding') or contains(@title,'做种')]/parent::dt/following-sibling::dd[1]",
               "filters": [
-                { "name": "strip" },
-                { "name": "replace", "args": ["\u00a0", " "] },
-                { "name": "byte_size" }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "byte_size"
+                }
               ]
             },
             {
               "selector": "//dt[contains(.,'Seeding')]/following-sibling::dd[1]",
               "filters": [
-                { "name": "strip" },
-                { "name": "replace", "args": ["\u00a0", " "] },
-                { "name": "re_search", "args": ["([\\d,.]+\\s*[KMGTPE]?i?B)", 1] },
-                { "name": "byte_size" }
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d,.]+\\s*[KMGTPE]?i?B)",
+                    1
+                  ]
+                },
+                {
+                  "name": "byte_size"
+                }
               ]
             }
           ]
         }
       }
     },
-
     "search": {
       "method": "GET",
       "path": "torrents?perPage=100",
       "params": {
-        "name": ["{keyword}"]
+        "name": [
+          "{keyword}"
+        ]
       },
       "list": {
         "selector": "table.data-table > tbody > tr"
@@ -314,12 +570,28 @@
             {
               "selector": "a.torrent-search--list__name",
               "attribute": "href",
-              "filters": [{ "name": "re_search", "args": ["/torrents/(\\d+)", 1] }]
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "/torrents/(\\d+)",
+                    1
+                  ]
+                }
+              ]
             },
             {
               "selector": "a[href*='/torrents/']",
               "attribute": "href",
-              "filters": [{ "name": "re_search", "args": ["/torrents/(\\d+)", 1] }]
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "/torrents/(\\d+)",
+                    1
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -362,12 +634,32 @@
             {
               "selector": "td.torrent-search--list__age > time",
               "attribute": "datetime",
-              "filters": [{ "name": "timestamp" }, { "name": "timezone", "args": ["+8"] }]
+              "filters": [
+                {
+                  "name": "timestamp"
+                },
+                {
+                  "name": "timezone",
+                  "args": [
+                    "+8"
+                  ]
+                }
+              ]
             },
             {
               "selector": "time[datetime]",
               "attribute": "datetime",
-              "filters": [{ "name": "timestamp" }, { "name": "timezone", "args": ["+8"] }]
+              "filters": [
+                {
+                  "name": "timestamp"
+                },
+                {
+                  "name": "timezone",
+                  "args": [
+                    "+8"
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -375,11 +667,19 @@
           "any": [
             {
               "selector": "td.torrent-search--list__size",
-              "filters": [{ "name": "byte_size" }]
+              "filters": [
+                {
+                  "name": "byte_size"
+                }
+              ]
             },
             {
               "selector": "td[class*='size']",
-              "filters": [{ "name": "byte_size" }]
+              "filters": [
+                {
+                  "name": "byte_size"
+                }
+              ]
             }
           ]
         },
@@ -431,6 +731,63 @@
           }
         }
       }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "list": {
+        "selector": "//table[contains(@class, 'data-table')]/tbody/tr[.//a[contains(@href,'/conversations/')]]"
+      },
+      "fields": {
+        "title": {
+          "selector": "./td[2]/a",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": "./td[2]/a/@href"
+        },
+        "id": {
+          "selector": "./td[2]/a/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "/conversations/(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "sender": {
+          "selector": "./td[1]//span[contains(@class, 'user-tag')]/a | ./td[1]//a[contains(@href,'/users/')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": "./td[3]//time/@title | ./td[3]//time/@datetime | ./td[3]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "unread": {
+          "selector": "./td[contains(@class,'unread') or .//i[contains(@class,'text-red') or contains(@class,'fa-envelope') and not(contains(@class,'open'))]]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        }
+      },
+      "path": "/users/{userId}/conversations"
     }
   }
 }

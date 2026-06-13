@@ -49,10 +49,18 @@
       "method": "GET",
       "path": "/api/torrent/search",
       "params": {
-        "page": ["{page}"],
-        "page_size": ["100"],
-        "sort": ["created_at DESC"],
-        "query": ["{keyword}"]
+        "page": [
+          "{page}"
+        ],
+        "page_size": [
+          "100"
+        ],
+        "sort": [
+          "created_at DESC"
+        ],
+        "query": [
+          "{keyword}"
+        ]
       },
       "list": {
         "selector": "data.torrents"
@@ -253,54 +261,6 @@
         }
       }
     },
-    "messages": {
-      "parser": "JsonPath",
-      "method": "GET",
-      "path": "/api/messages",
-      "params": {
-        "page": ["0"],
-        "page_size": ["20"]
-      },
-      "list": {
-        "selector": "data.messages"
-      },
-      "fields": {
-        "title": {
-          "selector": "title"
-        },
-        "id": {
-          "selector": "id"
-        },
-        "date": {
-          "selector": "created_at"
-        },
-        "content": {
-          "selector": "content"
-        }
-      }
-    },
-    "notice": {
-      "parser": "JsonPath",
-      "method": "GET",
-      "path": "/api/announcements/latest",
-      "params": {
-        "limit": ["3"]
-      },
-      "list": {
-        "selector": "data"
-      },
-      "fields": {
-        "title": {
-          "selector": "title"
-        },
-        "content": {
-          "selector": "body"
-        },
-        "create_time": {
-          "selector": "created_at"
-        }
-      }
-    },
     "details": {
       "parser": "JsonPath",
       "method": "GET",
@@ -351,7 +311,9 @@
       "method": "POST",
       "path": "/api/points/attendance",
       "params": {
-        "mode": ["fixed"]
+        "mode": [
+          "fixed"
+        ]
       },
       "fields": {
         "signed_in": {

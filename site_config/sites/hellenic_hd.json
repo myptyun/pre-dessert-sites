@@ -17,10 +17,18 @@
   },
   "category": {
     "movie": [
-      { "id": 1, "cat": "Movies", "desc": "Movies" }
+      {
+        "id": 1,
+        "cat": "Movies",
+        "desc": "Movies"
+      }
     ],
     "tv": [
-      { "id": 2, "cat": "TV", "desc": "TV Show" }
+      {
+        "id": 2,
+        "cat": "TV",
+        "desc": "TV Show"
+      }
     ]
   },
   "requests": {
@@ -31,41 +39,100 @@
       "fields": {
         "is_login": {
           "selector": "//a[contains(@class,'top-nav__username--highresolution')]",
-          "filters": [{ "name": "not_blank" }]
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
         },
         "id": {
-          "selector": "//a[contains(@class,'top-nav__username--highresolution')]/@href",
-          "filters": [{ "name": "re_search", "args": ["/users/([^/]+)", 1] }]
+          "selector": "//a[contains(@href,'/users/') and (contains(@href,'/conversations') or contains(@class,'username') or contains(@class,'user'))]/@href | //meta[@name='user-login']/@content | //a[contains(@href,'/users/')]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "/users/([^/?#]+)/",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
         },
         "name": {
           "selector": "//a[contains(@class,'top-nav__username--highresolution')]/span/text()",
-          "filters": [{ "name": "strip" }]
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "uploaded": {
           "selector": "//li[contains(@class, 'ratio-bar__uploaded')]/a/text()",
           "filters": [
-            { "name": "replace", "args": ["\u00a0", " "] },
-            { "name": "byte_size" }
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                " "
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "downloaded": {
           "selector": "//li[contains(@class, 'ratio-bar__downloaded')]/a/text()",
           "filters": [
-            { "name": "replace", "args": ["\u00a0", " "] },
-            { "name": "byte_size" }
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                " "
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "ratio": {
           "selector": "//li[contains(@class, 'ratio-bar__ratio')]/a/text()",
-          "filters": [{ "name": "strip" }]
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "bonus": {
           "selector": "//li[contains(@class,'ratio-bar__points')]/a//text()",
           "filters": [
-            { "name": "replace", "args": ["\u202f", ""] },
-            { "name": "replace", "args": [" ", ""] },
-            { "name": "replace", "args": [",", ""] },
-            { "name": "strip" }
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                ""
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                ""
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         }
       }
@@ -81,16 +148,39 @@
         "join_at": {
           "selector": "//time[contains(@class, 'profile__registration')]/@title",
           "filters": [
-            { "name": "re_search", "args": ["(\\d{4}-\\d{2}-\\d{2})", 1] },
-            { "name": "timestamp", "args": ["2006-01-02"] },
-            { "name": "timezone", "args": ["+6"] }
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "2006-01-02"
+              ]
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+6"
+              ]
+            }
           ]
         },
         "last_accessed": {
           "selector": "//dt[contains(text(),'上次登录时间')]/following-sibling::dd[1]/time/@datetime",
           "filters": [
-            { "name": "timestamp" },
-            { "name": "timezone", "args": ["+6"] }
+            {
+              "name": "timestamp"
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+6"
+              ]
+            }
           ]
         }
       }
@@ -99,48 +189,42 @@
       "parser": "XPath",
       "method": "GET",
       "path": "/users/{userId}",
-      "disabled_extends": { "list": true },
+      "disabled_extends": {
+        "list": true
+      },
       "fields": {
         "count": {
           "selector": "//dt[contains(.,'总做种数量')]/following-sibling::dd[1]/text()",
           "filters": [
-            { "name": "replace", "args": [",", ""] },
-            { "name": "strip" }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         },
         "size": {
           "selector": "//dt[contains(.,'做种体积')]/following-sibling::dd[1]/text()",
           "filters": [
-            { "name": "replace", "args": ["\u00a0", " "] },
-            { "name": "strip" },
-            { "name": "byte_size" }
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                " "
+              ]
+            },
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
           ]
-        }
-      }
-    },
-    "messages": {
-      "parser": "XPath",
-      "method": "GET",
-      "path": "/users/{userId}/conversations",
-      "list": { "selector": "//table[contains(@class, 'data-table')]/tbody/tr" },
-      "fields": {
-        "title": { "selector": "./td[2]/a", "filters": [{ "name": "strip" }] },
-        "link": { "selector": "./td[2]/a/@href" },
-        "id": {
-          "selector": "./td[2]/a/@href",
-          "filters": [{ "name": "re_search", "args": ["/conversations/(\\d+)", 1] }]
-        },
-        "sender": {
-          "selector": "./td[1]//span[contains(@class, 'user-tag')]/a",
-          "filters": [{ "name": "strip" }]
-        },
-        "date": {
-          "selector": "./td[3]/time/@title",
-          "filters": [{ "name": "strip" }]
-        },
-        "unread": {
-          "selector": "./td[5]/i[not(contains(@class, 'text-green'))]",
-          "filters": [{ "name": "not_blank" }]
         }
       }
     },
@@ -154,21 +238,12 @@
         }
       }
     },
-    "message_detail": {
-      "parser": "XPath",
-      "method": "GET",
-      "path": "/mail/{id}",
-      "fields": {
-        "content": {
-          "selector": "//div[contains(@class,'message-body')]//div[contains(@class,'col-sm-12')]",
-          "filters": [{ "name": "strip" }]
-        }
-      }
-    },
     "search": {
       "path": "torrents?perPage=100&categoryIds[0]=1&categoryIds[1]=2",
-      "params": { 
-        "name": ["{keyword}"]
+      "params": {
+        "name": [
+          "{keyword}"
+        ]
       },
       "list": {
         "selector": "table.data-table > tbody > tr[data-torrent-id]"
@@ -178,7 +253,13 @@
           "selector": "a.torrent-search--list__name",
           "attribute": "href",
           "filters": [
-            { "name": "re_search", "args": ["/torrents/(\\d+)", 1] }
+            {
+              "name": "re_search",
+              "args": [
+                "/torrents/(\\d+)",
+                1
+              ]
+            }
           ]
         },
         "title": {
@@ -196,15 +277,29 @@
           "selector": "td.torrent-search--list__age time",
           "attribute": "datetime",
           "filters": [
-            { "name": "strip" },
-            { "name": "timestamp", "args": ["2006-01-02 15:04:05"] },
-            { "name": "timezone", "args": ["+6"] }
+            {
+              "name": "strip"
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "2006-01-02 15:04:05"
+              ]
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+6"
+              ]
+            }
           ]
         },
         "size": {
           "selector": "td.torrent-search--list__size > span",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "seeders": {
@@ -228,6 +323,63 @@
           }
         }
       }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "list": {
+        "selector": "//table[contains(@class, 'data-table')]/tbody/tr[.//a[contains(@href,'/conversations/')]]"
+      },
+      "fields": {
+        "title": {
+          "selector": "./td[2]/a",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": "./td[2]/a/@href"
+        },
+        "id": {
+          "selector": "./td[2]/a/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "/conversations/(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "sender": {
+          "selector": "./td[1]//span[contains(@class, 'user-tag')]/a | ./td[1]//a[contains(@href,'/users/')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": "./td[3]//time/@title | ./td[3]//time/@datetime | ./td[3]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "unread": {
+          "selector": "./td[contains(@class,'unread') or .//i[contains(@class,'text-red') or contains(@class,'fa-envelope') and not(contains(@class,'open'))]]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        }
+      },
+      "path": "/users/{userId}/conversations"
     }
   }
 }
