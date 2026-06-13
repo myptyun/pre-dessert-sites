@@ -1,0 +1,802 @@
+{
+  "id": "filelist",
+  "name": "Filelist",
+  "domain": "https://filelist.io",
+  "encoding": "UTF-8",
+  "public": false,
+  "required": {
+    "cookie": true,
+    "sign_in": false
+  },
+  "meta": {
+    "has_free": false,
+    "has_2x_free": false,
+    "has_hr": false,
+    "has_cover": false,
+    "has_notice": true,
+    "has_message": true
+  },
+  "category": {
+    "movie": [],
+    "tv": [],
+    "music": [],
+    "other": []
+  },
+  "requests": {
+    "favicon": {
+      "parser": "None",
+      "method": "GET",
+      "path": "/favicon.ico"
+    },
+    "user_basic_info": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/",
+      "fields": {
+        "is_login": {
+          "selector": "//a[contains(@href, '/logout.php')]/@href",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        },
+        "id": {
+          "selector": "//div[contains(@class,'statusbar')]//a[contains(@href, '/logout.php')]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "name": {
+          "selector": "//div[contains(@class,'statusbar')]//a[contains(@href, '/userdetails.php')]/span/text()",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "level": {
+          "selector": "//div[contains(@class,'statusbar')]//font[@color='#f9a200']/text()",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "bonus": {
+          "selector": "//div[contains(@class,'statusbar')]//a[contains(@href, '/shop.php')]/text()[normalize-space()]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            }
+          ]
+        },
+        "invitation": {
+          "selector": "//div[contains(@class,'statusbar')]//a[contains(@href, '/invite.php')]/text()",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "Invites\\s*(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "uploaded": {
+          "selector": "//div[contains(@class,'statusbar')]//font[normalize-space()='Uploaded']/following-sibling::text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ":",
+                ""
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "downloaded": {
+          "selector": "//div[contains(@class,'statusbar')]//font[normalize-space()='Downloaded']/following-sibling::text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ":",
+                ""
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "ratio": {
+          "selector": "//div[contains(@class,'statusbar')]//font[normalize-space()='Ratio']/following-sibling::text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                "Inf.",
+                "999999"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "Inf",
+                "999999"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "([0-9.]+)",
+                1
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "infos": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/",
+      "fields": {
+        "passkey": {
+          "selector": "//a[contains(@href, '/getrss.php')]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "passkey=([a-zA-Z0-9]+)",
+                1
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "search": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/browse.php",
+      "params": {
+        "search": [
+          "{keyword}"
+        ],
+        "page": [
+          "{page}"
+        ]
+      },
+      "list": {
+        "selector": "//div[contains(@class,'torrentrow')]"
+      },
+      "fields": {
+        "id": {
+          "selector": ".//a[contains(@href,'details.php?id=')][1]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "title": {
+          "any": [
+            {
+              "selector": ".//a[contains(@href,'details.php?id=')][1]/@title",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            },
+            {
+              "selector": ".//a[contains(@href,'details.php?id=')][1]",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            }
+          ]
+        },
+        "description": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[2]//font[contains(@class,'small')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "subtitle": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[2]//font[contains(@class,'small')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "details": {
+          "selector": ".//a[contains(@href,'details.php?id=')][1]/@href",
+          "filters": [
+            {
+              "name": "replace",
+              "args": [
+                "details.php",
+                "https://filelist.io/details.php"
+              ]
+            }
+          ]
+        },
+        "download": {
+          "selector": ".//a[contains(@href,'download.php?id=')][1]/@href",
+          "filters": [
+            {
+              "name": "replace",
+              "args": [
+                "download.php",
+                "https://filelist.io/download.php"
+              ]
+            }
+          ]
+        },
+        "pubdate": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[6]//font[contains(@class,'small')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "size": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[7]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                "\n",
+                " "
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                ""
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "volume": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[7]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                "\n",
+                " "
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                ""
+              ]
+            }
+          ]
+        },
+        "grabs": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[8]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "completed": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[8]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "times_completed": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[8]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "seeders": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[9]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "leechers": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[10]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "downloaders": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[10]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "downloadvolumefactor": {
+          "selector": ".",
+          "filters": [
+            {
+              "name": "constant",
+              "args": "1"
+            }
+          ]
+        },
+        "uploadvolumefactor": {
+          "selector": ".",
+          "filters": [
+            {
+              "name": "constant",
+              "args": "1"
+            }
+          ]
+        },
+        "labels": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[2]//img[contains(@src,'tags')]/@alt",
+          "array": true
+        },
+        "publish_date": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[6]//font[contains(@class,'small')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "cover": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[2]//span[contains(@title,'image.tmdb.org')]",
+          "attribute": "title",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "https?://image\\.tmdb\\.org/[^'\" >]+",
+                0
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "poster": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[2]//span[contains(@title,'image.tmdb.org')]",
+          "attribute": "title",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "https?://image\\.tmdb\\.org/[^'\" >]+",
+                0
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "image": {
+          "selector": "(.//div[contains(@class,'torrenttable')])[2]//span[contains(@title,'image.tmdb.org')]",
+          "attribute": "title",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "https?://image\\.tmdb\\.org/[^'\" >]+",
+                0
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
+        }
+      }
+    },
+    "user_details": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/userdetails.php",
+      "params": {
+        "id": [
+          "{userId}"
+        ]
+      },
+      "fields": {
+        "level": {
+          "selector": "//td[contains(@class,'colhead') and normalize-space()='Class']/following-sibling::td[1]//font/text() | //td[contains(@class,'colhead') and normalize-space()='Class']/following-sibling::td[1]//text()",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "join_at": {
+          "selector": "//td[contains(@class,'colhead') and contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'join')]/following-sibling::td[1]/text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        },
+        "last_accessed": {
+          "selector": "//td[contains(@class,'colhead') and contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'last')]/following-sibling::td[1]/text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        },
+        "join_date": {
+          "selector": "//td[contains(@class,'colhead') and contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'join')]/following-sibling::td[1]/text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        },
+        "last_seen": {
+          "selector": "//td[contains(@class,'colhead') and contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'last')]/following-sibling::td[1]/text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        }
+      }
+    },
+    "seeding_statistics": {
+      "disabled": true
+    },
+    "notice": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/forums.php",
+      "params": {
+        "action": [
+          "viewforum"
+        ],
+        "forumid": [
+          "1"
+        ]
+      },
+      "list": {
+        "selector": "//div[@id='viewforum']/div[contains(@class,'viewforumrow')][.//img[contains(@src,'sticky')]]"
+      },
+      "fields": {
+        "id": {
+          "selector": ".//a[contains(@href,'viewtopic')][1]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "topicid=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "title": {
+          "selector": ".//a[contains(@href,'viewtopic')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": ".//a[contains(@href,'viewtopic')][1]/@href",
+          "filters": [
+            {
+              "name": "replace",
+              "args": [
+                "?action=",
+                "https://filelist.io/forums.php?action="
+              ]
+            }
+          ]
+        },
+        "sender": {
+          "selector": ".//div[contains(@class,'startedby')]//a[contains(@href,'userdetails')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": ".//div[contains(@class,'lastpostdate')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "02/01/2006 - 15:04:05"
+              ]
+            }
+          ]
+        },
+        "content": {
+          "selector": ".",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        }
+      }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/messages.php",
+      "list": {
+        "selector": "//form[@name='mutliact']/div[contains(@class,'normalline')][.//a[contains(@href,'messages.php') or contains(@href,'userdetails.php')]]"
+      },
+      "fields": {
+        "id": {
+          "selector": ".//a[contains(@href,'messages.php')][1]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(?:id|messageid|msgid)=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "title": {
+          "selector": ".//a[contains(@href,'messages.php')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": ".//a[contains(@href,'messages.php')][1]/@href",
+          "filters": [
+            {
+              "name": "replace",
+              "args": [
+                "messages.php",
+                "https://filelist.io/messages.php"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "?action=",
+                "https://filelist.io/messages.php?action="
+              ]
+            }
+          ]
+        },
+        "sender": {
+          "selector": ".//a[contains(@href,'userdetails.php')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": ".//*[contains(text(), '/') and contains(text(), ':')][last()]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "02/01/2006 - 15:04:05"
+              ]
+            }
+          ]
+        },
+        "unread": {
+          "selector": ".//img[contains(@src,'unreadpm') or @alt='Unread' or contains(@title,'Unread')]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
