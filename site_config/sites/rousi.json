@@ -150,14 +150,6 @@
             }
           ]
         },
-        "signed_in": {
-          "filters": [
-            {
-              "name": "constant",
-              "args": "false"
-            }
-          ]
-        },
         "id": {
           "selector": "data.stats.username"
         },
@@ -188,6 +180,15 @@
         },
         "leeching_count": {
           "selector": "data.seeding_leeching_data.leeching_count"
+        },
+        "signed_in": {
+          "selector": "code",
+          "filters": [
+            {
+              "name": "constant",
+              "args": "true"
+            }
+          ]
         }
       }
     },
@@ -374,18 +375,25 @@
       "body": {
         "mode": "fixed"
       },
+      "success_status_codes": [
+        200,
+        400
+      ],
       "fields": {
         "signed_in": {
-          "selector": "code",
+          "selector": "message",
           "filters": [
             {
-              "name": "eq",
-              "args": "0"
+              "name": "constant",
+              "args": "true"
             }
           ]
         },
         "message": {
           "selector": "message"
+        },
+        "code": {
+          "selector": "code"
         }
       }
     },

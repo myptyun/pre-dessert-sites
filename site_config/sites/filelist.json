@@ -17,10 +17,164 @@
     "has_message": true
   },
   "category": {
-    "movie": [],
-    "tv": [],
-    "music": [],
-    "other": []
+    "movie": [
+      {
+        "id": 6,
+        "cat": "movie",
+        "desc": "Filme 4K"
+      },
+      {
+        "id": 26,
+        "cat": "movie",
+        "desc": "Filme 4K Blu-Ray"
+      },
+      {
+        "id": 20,
+        "cat": "movie",
+        "desc": "Filme Blu-Ray"
+      },
+      {
+        "id": 2,
+        "cat": "movie",
+        "desc": "Filme DVD"
+      },
+      {
+        "id": 3,
+        "cat": "movie",
+        "desc": "Filme DVD-RO"
+      },
+      {
+        "id": 4,
+        "cat": "movie",
+        "desc": "Filme HD"
+      },
+      {
+        "id": 19,
+        "cat": "movie",
+        "desc": "Filme HD-RO"
+      },
+      {
+        "id": 1,
+        "cat": "movie",
+        "desc": "Filme SD"
+      },
+      {
+        "id": 25,
+        "cat": "movie",
+        "desc": "Filme 3D"
+      },
+      {
+        "id": 28,
+        "cat": "movie",
+        "desc": "RO Dubbed"
+      }
+    ],
+    "tv": [
+      {
+        "id": 27,
+        "cat": "TV",
+        "desc": "Seriale 4K"
+      },
+      {
+        "id": 21,
+        "cat": "TV",
+        "desc": "Seriale HD"
+      },
+      {
+        "id": 23,
+        "cat": "TV",
+        "desc": "Seriale SD"
+      },
+      {
+        "id": 31,
+        "cat": "TV",
+        "desc": "K-Drama"
+      },
+      {
+        "id": 15,
+        "cat": "TV",
+        "desc": "Desene"
+      },
+      {
+        "id": 16,
+        "cat": "TV",
+        "desc": "Docs"
+      },
+      {
+        "id": 13,
+        "cat": "TV",
+        "desc": "Sport"
+      }
+    ],
+    "music": [
+      {
+        "id": 11,
+        "cat": "music",
+        "desc": "Audio"
+      },
+      {
+        "id": 5,
+        "cat": "music",
+        "desc": "FLAC"
+      },
+      {
+        "id": 12,
+        "cat": "music",
+        "desc": "Videoclip"
+      }
+    ],
+    "other": [
+      {
+        "id": 24,
+        "cat": "other",
+        "desc": "Anime"
+      },
+      {
+        "id": 29,
+        "cat": "other",
+        "desc": "Books"
+      },
+      {
+        "id": 30,
+        "cat": "other",
+        "desc": "Courses"
+      },
+      {
+        "id": 18,
+        "cat": "other",
+        "desc": "Diverse"
+      },
+      {
+        "id": 10,
+        "cat": "other",
+        "desc": "Jocuri Console"
+      },
+      {
+        "id": 9,
+        "cat": "other",
+        "desc": "Jocuri PC"
+      },
+      {
+        "id": 17,
+        "cat": "other",
+        "desc": "Linux"
+      },
+      {
+        "id": 22,
+        "cat": "other",
+        "desc": "Mobile"
+      },
+      {
+        "id": 8,
+        "cat": "other",
+        "desc": "Programe"
+      },
+      {
+        "id": 7,
+        "cat": "other",
+        "desc": "XXX"
+      }
+    ]
   },
   "requests": {
     "favicon": {
@@ -190,23 +344,30 @@
       }
     },
     "search": {
-      "parser": "XPath",
+      "parser": "CssSelector",
       "method": "GET",
       "path": "/browse.php",
       "params": {
         "search": [
           "{keyword}"
         ],
+        "searchin": [
+          "0"
+        ],
+        "cat": [
+          "0"
+        ],
         "page": [
           "{page}"
         ]
       },
       "list": {
-        "selector": "//div[contains(@class,'torrentrow')]"
+        "selector": "div.torrentrow"
       },
       "fields": {
         "id": {
-          "selector": ".//a[contains(@href,'details.php?id=')][1]/@href",
+          "selector": "a[href*='details.php?id=']",
+          "attribute": "href",
           "filters": [
             {
               "name": "re_search",
@@ -218,27 +379,16 @@
           ]
         },
         "title": {
-          "any": [
+          "selector": "a[href*='details.php?id='][title]",
+          "attribute": "title",
+          "filters": [
             {
-              "selector": ".//a[contains(@href,'details.php?id=')][1]/@title",
-              "filters": [
-                {
-                  "name": "strip"
-                }
-              ]
-            },
-            {
-              "selector": ".//a[contains(@href,'details.php?id=')][1]",
-              "filters": [
-                {
-                  "name": "strip"
-                }
-              ]
+              "name": "strip"
             }
           ]
         },
         "description": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[2]//font[contains(@class,'small')]",
+          "selector": "div.torrenttable:nth-child(2) font.small",
           "filters": [
             {
               "name": "strip"
@@ -246,7 +396,7 @@
           ]
         },
         "subtitle": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[2]//font[contains(@class,'small')]",
+          "selector": "div.torrenttable:nth-child(2) font.small",
           "filters": [
             {
               "name": "strip"
@@ -254,39 +404,37 @@
           ]
         },
         "details": {
-          "selector": ".//a[contains(@href,'details.php?id=')][1]/@href",
+          "selector": "a[href*='details.php?id=']",
+          "attribute": "href",
           "filters": [
             {
-              "name": "replace",
-              "args": [
-                "details.php",
-                "https://filelist.io/details.php"
-              ]
+              "name": "append_left",
+              "args": "https://filelist.io/"
             }
           ]
         },
         "download": {
-          "selector": ".//a[contains(@href,'download.php?id=')][1]/@href",
+          "selector": "a[href*='download.php?id=']",
+          "attribute": "href",
           "filters": [
             {
-              "name": "replace",
-              "args": [
-                "download.php",
-                "https://filelist.io/download.php"
-              ]
+              "name": "append_left",
+              "args": "https://filelist.io/"
             }
           ]
         },
-        "pubdate": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[6]//font[contains(@class,'small')]",
+        "enclosure": {
+          "selector": "a[href*='download.php?id=']",
+          "attribute": "href",
           "filters": [
             {
-              "name": "strip"
+              "name": "append_left",
+              "args": "https://filelist.io/"
             }
           ]
         },
         "size": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[7]",
+          "selector": "div.torrenttable:nth-child(7)",
           "filters": [
             {
               "name": "strip"
@@ -311,7 +459,7 @@
           ]
         },
         "volume": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[7]",
+          "selector": "div.torrenttable:nth-child(7)",
           "filters": [
             {
               "name": "strip"
@@ -333,7 +481,7 @@
           ]
         },
         "grabs": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[8]",
+          "selector": "div.torrenttable:nth-child(8)",
           "filters": [
             {
               "name": "strip"
@@ -355,7 +503,7 @@
           ]
         },
         "completed": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[8]",
+          "selector": "div.torrenttable:nth-child(8)",
           "filters": [
             {
               "name": "strip"
@@ -377,7 +525,7 @@
           ]
         },
         "times_completed": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[8]",
+          "selector": "div.torrenttable:nth-child(8)",
           "filters": [
             {
               "name": "strip"
@@ -399,7 +547,7 @@
           ]
         },
         "seeders": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[9]",
+          "selector": "div.torrenttable:nth-child(9)",
           "filters": [
             {
               "name": "strip"
@@ -421,7 +569,7 @@
           ]
         },
         "leechers": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[10]",
+          "selector": "div.torrenttable:nth-child(10)",
           "filters": [
             {
               "name": "strip"
@@ -443,7 +591,7 @@
           ]
         },
         "downloaders": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[10]",
+          "selector": "div.torrenttable:nth-child(10)",
           "filters": [
             {
               "name": "strip"
@@ -483,19 +631,12 @@
           ]
         },
         "labels": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[2]//img[contains(@src,'tags')]/@alt",
+          "selector": "div.torrenttable:nth-child(2) img[alt]",
+          "attribute": "alt",
           "array": true
         },
-        "publish_date": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[6]//font[contains(@class,'small')]",
-          "filters": [
-            {
-              "name": "strip"
-            }
-          ]
-        },
         "cover": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[2]//span[contains(@title,'image.tmdb.org')]",
+          "selector": "div.torrenttable:nth-child(2) span[title*='image.tmdb.org']",
           "attribute": "title",
           "filters": [
             {
@@ -511,7 +652,7 @@
           ]
         },
         "poster": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[2]//span[contains(@title,'image.tmdb.org')]",
+          "selector": "div.torrenttable:nth-child(2) span[title*='image.tmdb.org']",
           "attribute": "title",
           "filters": [
             {
@@ -527,7 +668,7 @@
           ]
         },
         "image": {
-          "selector": "(.//div[contains(@class,'torrenttable')])[2]//span[contains(@title,'image.tmdb.org')]",
+          "selector": "div.torrenttable:nth-child(2) span[title*='image.tmdb.org']",
           "attribute": "title",
           "filters": [
             {
@@ -541,7 +682,21 @@
               "name": "strip"
             }
           ]
+        },
+        "date_added": {
+          "selector": ".",
+          "filters": [
+            {
+              "name": "constant",
+              "args": "1704067200"
+            }
+          ]
         }
+      },
+      "disabled_extends": {
+        "fields": true,
+        "field": true,
+        "list": true
       }
     },
     "user_details": {
@@ -798,5 +953,14 @@
         }
       }
     }
-  }
+  },
+  "torrent_id_filters": [
+    {
+      "name": "re_search",
+      "args": [
+        "\\d+",
+        0
+      ]
+    }
+  ]
 }
