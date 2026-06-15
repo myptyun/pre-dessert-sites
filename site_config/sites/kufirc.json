@@ -28,10 +28,10 @@
     "user_basic_info": {
       "parser": "XPath",
       "method": "GET",
-      "path": "/",
+      "path": "/index.php",
       "fields": {
         "is_login": {
-          "selector": "//a[@class='username'][contains(@href,'user.php?id=')]",
+          "selector": "//li[@id='nav_logout'] | //form[@id='logout'] | //a[contains(@class,'username') and contains(@href,'user.php?id=')]",
           "filters": [
             {
               "name": "not_blank"
@@ -39,19 +39,19 @@
           ]
         },
         "id": {
-          "selector": "//a[@class='username'][contains(@href,'user.php?id=')]/@href",
+          "selector": "//a[contains(@class,'username') and contains(@href,'user.php?id=')]/@href | //a[contains(@href,'/user/') and contains(@href,'/security')]/@href",
           "filters": [
             {
               "name": "re_search",
               "args": [
-                "user\\.php\\?id=(\\d+)",
+                "(?:user\\.php\\?id=|/user/)(\\d+)",
                 1
               ]
             }
           ]
         },
         "name": {
-          "selector": "//a[@class='username'][contains(@href,'user.php?id=')]",
+          "selector": "//a[contains(@class,'username') and contains(@href,'user.php?id=')]/text()[normalize-space()][last()]",
           "filters": [
             {
               "name": "strip"
@@ -59,29 +59,31 @@
           ]
         },
         "uploaded": {
-          "selector": "//table[contains(@class,'userinfo_stats')]//td[a[contains(@href,'type=seeding')]]/following-sibling::td[1]//span[@class='stat']",
+          "selector": "//table[contains(@class,'userinfo_stats')]//a[contains(@href,'type=seeding')]/ancestor::td[1]/following-sibling::td[1]//span[contains(@class,'stat')][1]/@title",
           "filters": [
             {
-              "name": "strip"
-            },
-            {
-              "name": "byte_size"
+              "name": "re_search",
+              "args": [
+                "([0-9]+)",
+                1
+              ]
             }
           ]
         },
         "downloaded": {
-          "selector": "//table[contains(@class,'userinfo_stats')]//td[a[contains(@href,'type=leeching')]]/following-sibling::td[1]//span[@class='stat']",
+          "selector": "//table[contains(@class,'userinfo_stats')]//a[contains(@href,'type=leeching')]/ancestor::td[1]/following-sibling::td[1]//span[contains(@class,'stat')][1]/@title",
           "filters": [
             {
-              "name": "strip"
-            },
-            {
-              "name": "byte_size"
+              "name": "re_search",
+              "args": [
+                "([0-9]+)",
+                1
+              ]
             }
           ]
         },
         "ratio": {
-          "selector": "//table[contains(@class,'userinfo_stats')]//td[a[contains(@href,'ratio') and contains(.,'Ratio')]]/following-sibling::td[1]//span[@class='stat']",
+          "selector": "//table[contains(@class,'userinfo_stats')]//a[contains(@href,'ratio')]/ancestor::td[1]/following-sibling::td[1]//span[contains(@class,'stat')][1]",
           "filters": [
             {
               "name": "strip"
@@ -89,28 +91,42 @@
             {
               "name": "replace",
               "args": [
-                ",",
-                ""
+                "∞",
+                "999999"
               ]
             },
             {
               "name": "replace",
               "args": [
                 "Inf.",
-                "0"
+                "999999"
               ]
             },
             {
               "name": "replace",
               "args": [
                 "Inf",
-                "0"
+                "999999"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "([0-9.]+)",
+                1
               ]
             }
           ]
         },
         "bonus": {
-          "selector": "//span[@id='stats_credits']",
+          "selector": "//span[@id='stats_credits']/text()[normalize-space()][1]",
           "filters": [
             {
               "name": "strip"
@@ -120,6 +136,37 @@
               "args": [
                 ",",
                 ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "([0-9.]+)",
+                1
+              ]
+            }
+          ]
+        },
+        "upload": {
+          "selector": "//table[contains(@class,'userinfo_stats')]//a[contains(@href,'type=seeding')]/ancestor::td[1]/following-sibling::td[1]//span[contains(@class,'stat')][1]/@title",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "([0-9]+)",
+                1
+              ]
+            }
+          ]
+        },
+        "download": {
+          "selector": "//table[contains(@class,'userinfo_stats')]//a[contains(@href,'type=leeching')]/ancestor::td[1]/following-sibling::td[1]//span[contains(@class,'stat')][1]/@title",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "([0-9]+)",
+                1
               ]
             }
           ]
@@ -129,37 +176,25 @@
     "user_details": {
       "parser": "XPath",
       "method": "GET",
-      "path": "/user.php?id={userId}",
+      "path": "/user.php",
       "fields": {
         "level": {
-          "any": [
+          "selector": "//ul[contains(@class,'stats')]/li[contains(normalize-space(.),'Class:')]",
+          "filters": [
             {
-              "selector": "//div[contains(@class,'sidebar')]//li[contains(.,'Class') or contains(.,'Rank') or contains(.,'Level')]",
-              "filters": [
-                {
-                  "name": "re_search",
-                  "args": [
-                    "(?:Class|Rank|Level):\\s*([^<]+)",
-                    1
-                  ]
-                },
-                {
-                  "name": "strip"
-                }
+              "name": "re_search",
+              "args": [
+                "Class:\\s*([^\\n<]+)",
+                1
               ]
             },
             {
-              "selector": "//span[contains(@class,'rank') or contains(@class,'user_class')]",
-              "filters": [
-                {
-                  "name": "strip"
-                }
-              ]
+              "name": "strip"
             }
           ]
         },
         "join_at": {
-          "selector": "//ul[@class='stats nobullet']/li[contains(.,'Joined')]/span/@title",
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Joined:')]//span[contains(@class,'time')]/@title | //ul[contains(@class,'stats')]/li[contains(.,'Joined:')]//span[contains(@class,'time')]/@alt",
           "filters": [
             {
               "name": "strip"
@@ -168,18 +203,12 @@
               "name": "timestamp",
               "args": [
                 "Jan 02 2006, 15:04"
-              ]
-            },
-            {
-              "name": "timezone",
-              "args": [
-                "+19"
               ]
             }
           ]
         },
         "last_accessed": {
-          "selector": "//ul[@class='stats nobullet']/li[contains(.,'Last Seen')]/span/@title",
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Last Seen:')]//span[contains(@class,'time')]/@title | //ul[contains(@class,'stats')]/li[contains(.,'Last Seen:')]//span[contains(@class,'time')]/@alt",
           "filters": [
             {
               "name": "strip"
@@ -189,22 +218,16 @@
               "args": [
                 "Jan 02 2006, 15:04"
               ]
-            },
-            {
-              "name": "timezone",
-              "args": [
-                "+19"
-              ]
             }
           ]
         },
         "seeding_size": {
-          "selector": "//li[contains(.,'Seeding Size:')]",
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Seeding Size:')]",
           "filters": [
             {
               "name": "re_search",
               "args": [
-                "Seeding Size:\\s*([\\d.,]+\\s*[KMGTP]?i?B)",
+                "Seeding Size:\\s*([\\d.,]+\\s*[KMGTP]?i?B|[\\d.,]+\\s*B)",
                 1
               ]
             },
@@ -217,7 +240,7 @@
           ]
         },
         "seeding_count": {
-          "selector": "//li[contains(.,'Seeding:') and contains(.,'View')]",
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Seeding:') and contains(.,'View')]",
           "filters": [
             {
               "name": "re_search",
@@ -230,7 +253,155 @@
               "name": "strip"
             }
           ]
+        },
+        "join_date": {
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Joined:')]//span[contains(@class,'time')]/@title | //ul[contains(@class,'stats')]/li[contains(.,'Joined:')]//span[contains(@class,'time')]/@alt",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "Jan 02 2006, 15:04"
+              ]
+            }
+          ]
+        },
+        "last_seen": {
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Last Seen:')]//span[contains(@class,'time')]/@title | //ul[contains(@class,'stats')]/li[contains(.,'Last Seen:')]//span[contains(@class,'time')]/@alt",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "Jan 02 2006, 15:04"
+              ]
+            }
+          ]
+        },
+        "uploaded": {
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Uploaded:')][1]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "Uploaded:\\s*([0-9.,]+\\s*(?:KiB|MiB|GiB|TiB|PiB|KB|MB|GB|TB|PB|B))",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "downloaded": {
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Downloaded:')][1]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "Downloaded:\\s*([0-9.,]+\\s*(?:KiB|MiB|GiB|TiB|PiB|KB|MB|GB|TB|PB|B))",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "ratio": {
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Ratio:')]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                "∞",
+                "999999"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "Inf.",
+                "999999"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "Inf",
+                "999999"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "([0-9.]+)",
+                1
+              ]
+            }
+          ]
+        },
+        "upload": {
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Uploaded:')][1]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "Uploaded:\\s*([0-9.,]+\\s*(?:KiB|MiB|GiB|TiB|PiB|KB|MB|GB|TB|PB|B))",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "download": {
+          "selector": "//ul[contains(@class,'stats')]/li[contains(.,'Downloaded:')][1]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "Downloaded:\\s*([0-9.,]+\\s*(?:KiB|MiB|GiB|TiB|PiB|KB|MB|GB|TB|PB|B))",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
         }
+      },
+      "params": {
+        "id": [
+          "{userId}"
+        ]
       }
     },
     "seeding_statistics": {

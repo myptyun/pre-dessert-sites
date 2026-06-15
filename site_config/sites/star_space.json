@@ -152,7 +152,9 @@
     "search": {
       "path": "/p_torrent/video_list_t.php",
       "params": {
-        "area": ["name"],
+        "area": [
+          "name"
+        ],
         "search": [
           "{keyword}"
         ]
@@ -259,13 +261,6 @@
       "fields": {
         "content": {
           "selector": "/html/body/table[2]/tbody/tr/td/table[2]/tbody/tr/td/table/tbody/tr[3]/td[2]"
-        }
-      }
-    },
-    "notice": {
-      "fields": {
-        "content": {
-          "selector": "//*[@id='tb_content']/tbody/tr/td"
         }
       }
     },

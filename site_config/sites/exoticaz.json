@@ -61,32 +61,76 @@
     "search": {
       "path": "/torrents",
       "list": {
-        "selector": "div.card.mt-2 > div.card-body.p-2 > div.table-responsive > table > tbody > tr"
+        "selector": "div.table-responsive table tbody tr:has(a.torrent-link[href*='/torrent/'])"
       },
       "fields": {
         "id": {
-          "selector": "a[href^=\"https://exoticaz.to/torrent/\"]",
+          "selector": "a.torrent-link[href*='/torrent/']",
           "attribute": "href",
           "filters": [
             {
               "name": "re_search",
               "args": [
-                "\\d+",
-                0
+                "/torrent/(\\d+)",
+                1
               ]
             }
           ]
         },
         "title": {
-          "selector": "a[title][href*=\"/torrent/\"]",
-          "attribute": "title"
+          "any": [
+            {
+              "selector": "a.torrent-link[title]",
+              "attribute": "title",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            },
+            {
+              "selector": "a.torrent-link",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            },
+            {
+              "selector": "td:nth-child(2) img[alt]",
+              "attribute": "alt",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            }
+          ]
         },
         "category": {
-          "selector": "td:nth-child(1) > i.fa.fa-video.category-icon[title]",
-          "attribute": "title"
+          "any": [
+            {
+              "selector": "td:nth-child(1) i.category-icon[title]",
+              "attribute": "title",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            },
+            {
+              "selector": "td:nth-child(2) span[title]",
+              "attribute": "title",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            }
+          ]
         },
         "details": {
-          "selector": "a[href^=\"https://exoticaz.to/torrent/\"]",
+          "selector": "a.torrent-link[href*='/torrent/']",
           "attribute": "href",
           "filters": [
             {
@@ -99,48 +143,140 @@
           ]
         },
         "download": {
-          "selector": "a[href^=\"https://exoticaz.to/download/torrent/\"]",
+          "selector": "a[href*='/download/torrent/'][title*='Download'], a[href*='/download/torrent/']",
           "attribute": "href"
         },
         "size": {
           "selector": "td:nth-child(5)",
           "filters": [
             {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                " "
+              ]
+            },
+            {
               "name": "byte_size"
             }
           ]
         },
         "seeders": {
-          "selector": "td:nth-child(6)"
+          "selector": "td:nth-child(6)",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "leechers": {
-          "selector": "td:nth-child(7)"
+          "selector": "td:nth-child(7)",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "grabs": {
-          "selector": "td:nth-child(8)"
+          "selector": "td:nth-child(8)",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "labels": {
-          "selector": "td:nth-child(2) > div.tags > a.tag",
-          "array": true
+          "selector": "td:nth-child(2) div.tags a.tag, td:nth-child(2) div.tags div.tag",
+          "array": true,
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "cover": {
-          "selector": "td:nth-child(2) > div.screen-image > img",
-          "attribute": "src"
+          "any": [
+            {
+              "selector": "td:nth-child(2) div.screen-image img",
+              "attribute": "src"
+            },
+            {
+              "selector": "td:nth-child(2) img",
+              "attribute": "src"
+            }
+          ]
         },
         "downloadvolumefactor": {
           "case": {
-            "i.fa.fa-star.text-yellow": 0,
-            "i.fa.fa-star-half-alt.text-pink": 0.5,
+            "i.fa.fa-star.text-yellow, i.fa-star.text-yellow, [title*='Free Download']": 0,
+            "i.fa-star-half-alt.text-pink, [title*='50%']": 0.5,
             "*": 1
           }
         },
         "uploadvolumefactor": {
           "case": {
-            "i.fa.fa-gem.text-green": 2,
+            "i.fa.fa-gem.text-green, i.fa-gem.text-green, [title*='Double Upload']": 2,
             "*": 1
           }
+        },
+        "description": {
+          "any": [
+            {
+              "selector": "td:nth-child(2) img[alt]",
+              "attribute": "alt",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            },
+            {
+              "selector": "a.torrent-link[title]",
+              "attribute": "title",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            }
+          ]
+        },
+        "date_elapsed": {
+          "selector": "td:nth-child(4)",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "uploader": {
+          "selector": "td:nth-child(2) a[href*='/profile/'][title]",
+          "attribute": "title",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "files": {
+          "selector": "td:nth-child(2) i[title*='files'], td:nth-child(2) [title*='Files']",
+          "attribute": "title",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
         }
-      }
+      },
+      "parser": "CssSelector",
+      "method": "GET"
     },
     "messages": {
       "parser": "XPath",
@@ -198,6 +334,333 @@
         },
         "content": {
           "selector": "//h1/following-sibling::table[.//tr/td[@class='colhead']]//tr[3]/td|//div[contains(@class,'layui-card-body')]"
+        }
+      }
+    },
+    "user_basic_info": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/profile/{userId}",
+      "fields": {
+        "is_login": {
+          "any": [
+            {
+              "selector": "//a[contains(@href,'/logout') or contains(@href,'logout')]/@href",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "(logout)",
+                    1
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    "logout",
+                    "true"
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "//form[contains(@action,'/logout') or contains(@action,'logout')]/@action",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "(logout)",
+                    1
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    "logout",
+                    "true"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "id": {
+          "any": [
+            {
+              "selector": "//a[@id='navbar-dropdown-user']/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            },
+            {
+              "selector": "//title/text()",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "^\\s*([^\\s<]+)\\s+-\\s+ExoticaZ",
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": {
+          "any": [
+            {
+              "selector": "//a[@id='navbar-dropdown-user']/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            },
+            {
+              "selector": "//title/text()",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "^\\s*([^\\s<]+)\\s+-\\s+ExoticaZ",
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "uploaded": {
+          "selector": "//tr[td[1][normalize-space()='Uploaded']]/td[2]/text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "downloaded": {
+          "selector": "//tr[td[1][normalize-space()='Downloaded']]/td[2]/text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "ratio": {
+          "selector": "//tr[td[1][normalize-space()='Ratio']]/td[2]/text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "([\\d.]+)",
+                1
+              ]
+            }
+          ]
+        },
+        "bonus": {
+          "any": [
+            {
+              "selector": "//tr[td[1][contains(normalize-space(),'Bonus Points')]]/td[2]/text()[1]",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d.]+)",
+                    1
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "//a[contains(@href,'/bonus') and contains(normalize-space(.),'Bonus')]/following-sibling::text()[1]",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d.]+)",
+                    1
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "//div[contains(@class,'ratio-bar')]//div[contains(.,'Bonus:')]/text()[last()]",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d.]+)",
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "user_details": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/profile/{userId}",
+      "fields": {
+        "level": {
+          "any": [
+            {
+              "selector": "//tr[td[1][normalize-space()='Rank']]/td[2]//*[contains(@class,'user-group')]/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            },
+            {
+              "selector": "//div[contains(@class,'ratio-bar')]//span[contains(@class,'user-group')][2]/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
+            }
+          ]
+        },
+        "join_at": {
+          "selector": "//tr[td[1][normalize-space()='Joined']]/td[2]/text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "^(\\d{2}\\s+[A-Za-z]{3}\\s+\\d{4}\\s+\\d{2}:\\d{2}\\s+[ap]m)",
+                1
+              ]
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "02 Jan 2006 03:04 pm"
+              ]
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+8"
+              ]
+            }
+          ]
+        },
+        "last_accessed": {
+          "selector": "//tr[td[1][contains(normalize-space(),'Last Access')]]/td[2]/text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "^(\\d{2}\\s+[A-Za-z]{3}\\s+\\d{4}\\s+\\d{2}:\\d{2}\\s+[ap]m)",
+                1
+              ]
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "02 Jan 2006 03:04 pm"
+              ]
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+2"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "seeding_statistics": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/profile/{userId}/active",
+      "list": {
+        "selector": "//table//tr[td]"
+      },
+      "fields": {
+        "size": {
+          "selector": "/td[2]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                " "
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "([\\d,.]+\\s*[KMGTPE]?i?B)\\s*$",
+                1
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
         }
       }
     }

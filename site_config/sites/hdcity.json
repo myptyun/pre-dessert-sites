@@ -15,13 +15,33 @@
   },
   "category": {
     "movie": [
-      { "id": 401, "cat": "Movies", "desc": "Movies/电影" }
+      {
+        "id": 401,
+        "cat": "Movies",
+        "desc": "Movies/电影"
+      }
     ],
     "tv": [
-      { "id": 404, "cat": "TV/Documentary", "desc": "Documentaries/纪录片" },
-      { "id": 405, "cat": "TV/Anime", "desc": "Animations/动漫" },
-      { "id": 402, "cat": "TV", "desc": "TV Series/连续剧" },
-      { "id": 403, "cat": "TV", "desc": "TV Shows/综艺" }
+      {
+        "id": 404,
+        "cat": "TV/Documentary",
+        "desc": "Documentaries/纪录片"
+      },
+      {
+        "id": 405,
+        "cat": "TV/Anime",
+        "desc": "Animations/动漫"
+      },
+      {
+        "id": 402,
+        "cat": "TV",
+        "desc": "TV Series/连续剧"
+      },
+      {
+        "id": 403,
+        "cat": "TV",
+        "desc": "TV Shows/综艺"
+      }
     ]
   },
   "requests": {
@@ -38,7 +58,10 @@
         },
         "hr_days": {
           "filters": [
-            { "name": "constant", "args": "1" }
+            {
+              "name": "constant",
+              "args": "1"
+            }
           ]
         }
       }
@@ -51,13 +74,21 @@
         "is_login": {
           "selector": "//a[contains(@href, 'logout')]",
           "filters": [
-            { "name": "not_blank" }
+            {
+              "name": "not_blank"
+            }
           ]
         },
         "id": {
           "selector": "//*[@id='fh5co-page']/center/div[1]/div[1]/table//tr/td[2]/div[1]/text()",
           "filters": [
-            { "name": "re_search", "args": [ "(\\d+)", 1 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
           ]
         },
         "name": {
@@ -66,18 +97,53 @@
         "level": {
           "selector": "//div[@id='bottomnav']//a[contains(@href, 'userdetails')]/text()[normalize-space()]",
           "filters": [
-            { "name": "re_search", "args": [ "\\[(.*?)\\]", 1 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "\\[(.*?)\\]",
+                1
+              ]
+            }
           ]
         },
         "share_ratio": {
           "any": [
             {
               "selector": "//i[@title='分享率：']/following-sibling::text()[1]",
-              "filters": [ { "name": "replace", "args": [ "---", "null" ] }, { "name": "strip" } ]
+              "filters": [
+                {
+                  "name": "replace",
+                  "args": [
+                    "---",
+                    "null"
+                  ]
+                },
+                {
+                  "name": "strip"
+                }
+              ]
             },
             {
               "selector": "//div[@class='text']/strong[contains(text(), '分享率')]/following-sibling::text()[1]",
-              "filters": [ { "name": "replace", "args": [ "---", "null" ] }, { "name": "replace", "args": [ ":", "" ] }, { "name": "strip" } ]
+              "filters": [
+                {
+                  "name": "replace",
+                  "args": [
+                    "---",
+                    "null"
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ":",
+                    ""
+                  ]
+                },
+                {
+                  "name": "strip"
+                }
+              ]
             }
           ]
         },
@@ -85,11 +151,29 @@
           "any": [
             {
               "selector": "//div[@class='text']/strong[contains(text(), '上传量')]/following-sibling::text()[1]",
-              "filters": [ { "name": "replace", "args": [ ":", "" ] }, { "name": "strip" }, { "name": "byte_size" } ]
+              "filters": [
+                {
+                  "name": "replace",
+                  "args": [
+                    ":",
+                    ""
+                  ]
+                },
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
             },
             {
               "selector": "//i[contains(@title, '上传')]/following-sibling::text()[1]",
-              "filters": [ { "name": "byte_size" } ]
+              "filters": [
+                {
+                  "name": "byte_size"
+                }
+              ]
             }
           ]
         },
@@ -97,11 +181,29 @@
           "any": [
             {
               "selector": "//div[@class='text']/strong[contains(text(), '下载量')]/following-sibling::text()[1]",
-              "filters": [ { "name": "replace", "args": [ ":", "" ] }, { "name": "strip" }, { "name": "byte_size" } ]
+              "filters": [
+                {
+                  "name": "replace",
+                  "args": [
+                    ":",
+                    ""
+                  ]
+                },
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
             },
             {
               "selector": "//i[contains(@title, '下载')]/following-sibling::text()[1]",
-              "filters": [ { "name": "byte_size" } ]
+              "filters": [
+                {
+                  "name": "byte_size"
+                }
+              ]
             }
           ]
         },
@@ -109,18 +211,36 @@
           "any": [
             {
               "selector": "//div[@class='text']/b[contains(text(), '魅力值')]/following-sibling::text()[1]",
-              "filters": [ { "name": "strip" } ]
+              "filters": [
+                {
+                  "name": "strip"
+                }
+              ]
             },
             {
               "selector": "//a[contains(@href,'mybonus')]/text()",
-              "filters": [ { "name": "re_search", "args": [ "([\\d\\.]+)", 1 ] } ]
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d\\.]+)",
+                    1
+                  ]
+                }
+              ]
             }
           ]
         },
         "join_date": {
           "selector": "//div[@class='text']/b[contains(text(), '加入日期')]/following-sibling::text()[1]",
           "filters": [
-            { "name": "re_search", "args": [ "(\\d{4}-\\d{2}-\\d{2})", 1 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2})",
+                1
+              ]
+            }
           ]
         }
       }
@@ -143,39 +263,77 @@
               "comment": "方法1：在任何文本中寻找 'x条记录' ",
               "selector": "//*[contains(text(), '条记录')]/text()",
               "filters": [
-                { "name": "re_search", "args": ["(\\d+)", 1] }
+                {
+                  "name": "re_search",
+                  "args": [
+                    "(\\d+)",
+                    1
+                  ]
+                }
               ]
             },
             {
               "comment": "方法2：备用，寻找 '共x条'",
               "selector": "//*[contains(text(), '共') and contains(text(), '条')]/text()",
               "filters": [
-                { "name": "re_search", "args": ["(\\d+)", 1] }
+                {
+                  "name": "re_search",
+                  "args": [
+                    "(\\d+)",
+                    1
+                  ]
+                }
               ]
             }
           ]
         },
         "size": {
           "any": [
-             {
-               "comment": "方法1：直接找 '总大小' 粗体字后面的内容",
-               "selector": "//b[contains(text(), '总大小')]/following-sibling::text()[1]",
-               "filters": [
-                 { "name": "replace", "args": [ ":", "" ] },
-                 { "name": "replace", "args": [ "：", "" ] },
-                 { "name": "strip" },
-                 { "name": "byte_size" }
-               ]
-             },
-             {
-               "comment": "方法2：全页搜索 '总大小：xxx' 格式的文本",
-               "selector": "//*[contains(text(), '总大小')]/text()",
-               "filters": [
-                 { "name": "re_search", "args": ["总大小[：:]\\s*(.*)", 1] },
-                 { "name": "strip" },
-                 { "name": "byte_size" }
-               ]
-             }
+            {
+              "comment": "方法1：直接找 '总大小' 粗体字后面的内容",
+              "selector": "//b[contains(text(), '总大小')]/following-sibling::text()[1]",
+              "filters": [
+                {
+                  "name": "replace",
+                  "args": [
+                    ":",
+                    ""
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    "：",
+                    ""
+                  ]
+                },
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
+            },
+            {
+              "comment": "方法2：全页搜索 '总大小：xxx' 格式的文本",
+              "selector": "//*[contains(text(), '总大小')]/text()",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "总大小[：:]\\s*(.*)",
+                    1
+                  ]
+                },
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
+            }
           ]
         }
       }
@@ -187,6 +345,74 @@
         "action": [
           "sign_in"
         ]
+      }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/messages.php",
+      "params": {
+        "action": [
+          "viewmailbox"
+        ],
+        "box": [
+          "1"
+        ],
+        "page": [
+          "{page}"
+        ]
+      },
+      "list": {
+        "selector": "//table//tr[.//a[contains(@href,'action=viewmessage')]]"
+      },
+      "fields": {
+        "title": {
+          "selector": ".//a[contains(@href,'action=viewmessage')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": ".//a[contains(@href,'action=viewmessage')][1]/@href"
+        },
+        "id": {
+          "selector": ".//a[contains(@href,'action=viewmessage')][1]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "sender": {
+          "selector": "./td[1]//a | ./td[2]//a[not(contains(@href,'action=viewmessage'))][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": "./td[last()]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "unread": {
+          "selector": ".//*[contains(@class,'unread') or contains(@class,'new') or contains(@src,'unread') or contains(@alt,'Unread')]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        }
       }
     }
   }

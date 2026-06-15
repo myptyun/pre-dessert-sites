@@ -20,13 +20,25 @@
   },
   "category": {
     "movie": [
-      { "id": 1, "cat": "Movies", "desc": "Movies" }
+      {
+        "id": 1,
+        "cat": "Movies",
+        "desc": "Movies"
+      }
     ],
     "tv": [
-      { "id": 2, "cat": "TV", "desc": "TV" }
+      {
+        "id": 2,
+        "cat": "TV",
+        "desc": "TV"
+      }
     ],
     "music": [
-      { "id": 3, "cat": "Audio", "desc": "Music" }
+      {
+        "id": 3,
+        "cat": "Audio",
+        "desc": "Music"
+      }
     ]
   },
   "requests": {
@@ -38,47 +50,100 @@
         "is_login": {
           "selector": "//a[contains(@href,'/logout')]",
           "filters": [
-            { "name": "not_blank" }
+            {
+              "name": "not_blank"
+            }
           ]
         },
         "id": {
-          "selector": "//ul[contains(@class, 'left-navbar')]//a[contains(@href, '/users/')][1]/@href",
+          "selector": "//a[contains(@href,'/users/') and (contains(@href,'/conversations') or contains(@class,'username') or contains(@class,'user'))]/@href | //meta[@name='user-login']/@content | //a[contains(@href,'/users/')]/@href",
           "filters": [
-            { "name": "re_search", "args": [ "/users/([^/]+)", 1 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "/users/([^/?#]+)/",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         },
         "name": {
           "selector": "//ul[contains(@class, 'left-navbar')]//a[contains(@href, '/users/')][1]/@href",
           "filters": [
-            { "name": "re_search", "args": [ "/users/([^/]+)", 1 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "/users/([^/]+)",
+                1
+              ]
+            }
           ]
         },
         "uploaded": {
           "selector": "//li//span[contains(@title, '上传')]/text()[normalize-space()]",
           "filters": [
-            { "name": "replace", "args": [ ",", "" ] },
-            { "name": "byte_size" }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "downloaded": {
           "selector": "//li//span[contains(@title, '下载')]/text()[normalize-space()]",
           "filters": [
-            { "name": "replace", "args": [ ",", "" ] },
-            { "name": "byte_size" }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "ratio": {
           "selector": "//li//span[contains(@title, '分享率')]/text()[normalize-space()]",
           "filters": [
-            { "name": "replace", "args": [ ",", "" ] }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            }
           ]
         },
         "bonus": {
           "selector": "//li//span[contains(@title, '魔力')]//a/text()",
           "filters": [
-            { "name": "replace", "args": [ "\u2009", "" ] },
-            { "name": "replace", "args": [ ",", "" ] },
-            { "name": "strip" }
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                ""
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         }
       }
@@ -97,93 +162,37 @@
         "join_at": {
           "selector": "//h4[contains(text(),'注册日期')]/text()",
           "filters": [
-            { "name": "re_search", "args": [ "([A-Za-z]{3}\\s+\\d{2}\\s+\\d{4})", 1 ] },
-            { "name": "timestamp", "args": [ "Jan 02 2006" ] }
+            {
+              "name": "re_search",
+              "args": [
+                "([A-Za-z]{3}\\s+\\d{2}\\s+\\d{4})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "Jan 02 2006"
+              ]
+            }
           ]
         },
         "last_accessed": {
           "selector": "//td[contains(text(),'上次登录时间')]/following-sibling::td[1]",
           "filters": [
-            { "name": "re_search", "args": [ "([A-Za-z]{3},\\s+[A-Za-z]{3}\\s+\\d{1,2},\\s+\\d{4}\\s+\\d{1,2}:\\d{2}\\s+[AP]M)", 1 ] },
-            { "name": "timestamp", "args": [ "Mon, Jan 2, 2006 3:04 PM" ] }
-          ]
-        }
-      }
-    },
-    "messages": {
-      "parser": "XPath",
-      "method": "GET",
-      "path": "mail/inbox",
-      "list": {
-        "selector": "//div[@class='table-responsive']/table/tbody/tr"
-      },
-      "params": {
-        "page": [
-          "{page}"
-        ]
-      },
-      "fields": {
-        "title": {
-          "selector": "td[2]/a/text()",
-          "filters": [
-            { "name": "strip" }
-          ]
-        },
-        "link": {
-          "selector": "td[2]/a/@href"
-        },
-        "id": {
-          "selector": "td[2]/a/@href",
-          "filters": [
-            { "name": "re_search", "args": [ "/mail/message/(\\d+)", 1 ] }
-          ]
-        },
-        "sender": {
-          "selector": "td[1]/a/text()",
-          "filters": [
-            { "name": "strip" }
-          ]
-        },
-        "date": {
-          "selector": "td[3]/text()",
-          "filters": [
-            { "name": "strip" },
-            { "name": "replace", "args": [ "\n", "" ] }
-          ]
-        },
-        "unread": {
-          "selector": "td[4]/span[contains(@class, 'label-danger')]"
-        }
-      }
-    },
-    "message_detail": {
-      "parser": "XPath",
-      "method": "GET",
-      "path": "/mail/message/{id}",
-      "fields": {
-        "title": {
-          "selector": "//div[@class='block']/h3/text()",
-          "filters": [
-            { "name": "strip" }
-          ]
-        },
-        "sender": {
-          "selector": "//div[contains(@class,'message-headers')]//strong[contains(.,'发件人')]/following-sibling::a/text()",
-          "filters": [
-            { "name": "strip" }
-          ]
-        },
-        "date": {
-          "selector": "//div[contains(@class,'message-headers')]//strong[contains(.,'已发送')]/parent::div/text()",
-          "filters": [
-            { "name": "re_search", "args": [ "(\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2})", 1 ] },
-            { "name": "timestamp", "args": [ "2006-01-02 15:04:05" ] }
-          ]
-        },
-        "content": {
-          "selector": "//div[contains(@class,'message-body')]//div[contains(@class,'col-sm-12')]",
-          "filters": [
-            { "name": "strip" }
+            {
+              "name": "re_search",
+              "args": [
+                "([A-Za-z]{3},\\s+[A-Za-z]{3}\\s+\\d{1,2},\\s+\\d{4}\\s+\\d{1,2}:\\d{2}\\s+[AP]M)",
+                1
+              ]
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "Mon, Jan 2, 2006 3:04 PM"
+              ]
+            }
           ]
         }
       }
@@ -196,7 +205,9 @@
         "content": {
           "selector": "//div[@class='well'][1]//p[contains(@style,'margin-top')]",
           "filters": [
-            { "name": "strip" }
+            {
+              "name": "strip"
+            }
           ]
         }
       }
@@ -212,14 +223,24 @@
         "size": {
           "selector": "//td[contains(text(),'做种体积')]/following-sibling::td[1]/span/text()",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "count": {
           "selector": "//span[contains(text(),'总做种数量')]/span/text()",
           "filters": [
-            { "name": "replace", "args": [ ",", "" ] },
-            { "name": "strip" }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         }
       }
@@ -245,7 +266,13 @@
           "selector": "a.view-torrent",
           "attribute": "href",
           "filters": [
-            { "name": "re_search", "args": [ "/torrents/(\\d+)", 1 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "/torrents/(\\d+)",
+                1
+              ]
+            }
           ]
         },
         "cover": {
@@ -266,7 +293,9 @@
         "size": {
           "selector": "td:nth-child(6)",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "seeders": {
@@ -292,6 +321,63 @@
           }
         }
       }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "list": {
+        "selector": "//table[contains(@class, 'data-table')]/tbody/tr[.//a[contains(@href,'/conversations/')]]"
+      },
+      "fields": {
+        "title": {
+          "selector": "./td[2]/a",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": "./td[2]/a/@href"
+        },
+        "id": {
+          "selector": "./td[2]/a/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "/conversations/(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "sender": {
+          "selector": "./td[1]//span[contains(@class, 'user-tag')]/a | ./td[1]//a[contains(@href,'/users/')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": "./td[3]//time/@title | ./td[3]//time/@datetime | ./td[3]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "unread": {
+          "selector": "./td[contains(@class,'unread') or .//i[contains(@class,'text-red') or contains(@class,'fa-envelope') and not(contains(@class,'open'))]]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        }
+      },
+      "path": "/users/{userId}/conversations"
     }
   }
 }
