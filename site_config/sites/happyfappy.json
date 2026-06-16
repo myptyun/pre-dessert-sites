@@ -1,7 +1,7 @@
 {
   "id": "happyfappy",
   "name": "HF",
-  "domain": "https://happyfappy.org",
+  "domain": "https://happyfappy.net",
   "encoding": "UTF-8",
   "public": false,
   "schema": "NexusPHP",
