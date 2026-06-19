@@ -9,8 +9,8 @@
     "sign_in": true
   },
   "meta": {
-    "has_free": true,
-    "has_2x_free": true,
+    "has_free": false,
+    "has_2x_free": false,
     "has_hr": false
   },
   "category": {
@@ -46,41 +46,93 @@
   },
   "requests": {
     "search": {
-      "fields": {
-        "labels": {
-          "selector": "td.embedded > span[title]",
-          "array": true
-        },
-        "description": {
-          "selector": "td.embedded",
-          "remove": "span,a,img,font,b,br",
-          "contents": -1
-        },
-        "hr_days": {
-          "filters": [
-            {
-              "name": "constant",
-              "args": "1"
-            }
-          ]
-        }
-      }
-    },
-    "user_basic_info": {
-      "parser": "XPath",
+      "parser": "CssSelector",
       "method": "GET",
-      "path": "/",
+      "path": "/pt",
+      "params": {
+        "iwannaseethis": [
+          "{keyword}"
+        ]
+      },
+      "list": {
+        "selector": "div.tr_normal.mitem, div.tr_free.mitem, div.tr_twoup.mitem, div.tr_important.mitem"
+      },
       "fields": {
-        "is_login": {
-          "selector": "//a[contains(@href, 'logout')]",
+        "id": {
+          "selector": "a[href^=\"t-\"]",
+          "attribute": "href",
           "filters": [
             {
-              "name": "not_blank"
+              "name": "re_search",
+              "args": [
+                "t-(\\d+)",
+                1
+              ]
             }
           ]
         },
-        "id": {
-          "selector": "//*[@id='fh5co-page']/center/div[1]/div[1]/table//tr/td[2]/div[1]/text()",
+        "category": {
+          "selector": ".mcontent",
+          "attribute": "style",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "category/modern/(\\d+)\\.png",
+                1
+              ]
+            }
+          ]
+        },
+        "cover": {
+          "selector": ".mcontent > img[title=\"Poster\"], .mcontent img[title=\"Poster\"]",
+          "attribute": "src"
+        },
+        "title": {
+          "any": [
+            {
+              "selector": ".mtop a[href^=\"t-\"] strong"
+            },
+            {
+              "selector": ".mtitle a[href^=\"t-\"]"
+            },
+            {
+              "selector": "a[href^=\"t-\"] strong"
+            },
+            {
+              "selector": "a[href^=\"t-\"]"
+            }
+          ]
+        },
+        "details": {
+          "selector": "a[href^=\"t-\"]",
+          "attribute": "href"
+        },
+        "download": {
+          "selector": "a[href^=\"download?id=\"]",
+          "attribute": "href"
+        },
+        "size": {
+          "selector": "*",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "sd_storage</i>\\s*([\\d.,]+\\s*[KMGTP]?i?B)",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "seeders": {
+          "selector": ".mbottom a[title=\"种子数\"] font, .mbottom a[href*=\"dllist=1#seeders\"] font, .mbottom a[title=\"种子数\"]",
           "filters": [
             {
               "name": "re_search",
@@ -91,8 +143,146 @@
             }
           ]
         },
+        "leechers": {
+          "selector": ".mbottom a[title=\"下载数\"] font, .mbottom a[href*=\"dllist=1#leechers\"] font, .mbottom a[title=\"下载数\"]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "grabs": {
+          "selector": ".mbottom a[title=\"完成数\"], .mbottom a[href^=\"viewsnatches?id=\"]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "date_added": {
+          "selector": ".mtop div:nth-child(2)",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        },
+        "description": {
+          "selector": ".mdesc"
+        },
+        "labels": {
+          "selector": ".mtags span[title=\"Tag\"], .mtags img[title], .mtags i[title]",
+          "attribute": "title",
+          "array": true
+        },
+        "hr_days": {
+          "filters": [
+            {
+              "name": "constant",
+              "args": "1"
+            }
+          ]
+        }
+      },
+      "disabled_extends": {
+        "fields": true,
+        "field": true
+      }
+    },
+    "user_basic_info": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/userdetails",
+      "fields": {
+        "is_login": {
+          "selector": "//a[contains(@href, 'logout')]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        },
+        "id": {
+          "any": [
+            {
+              "selector": "//div[contains(@class,'text')][b[normalize-space()='ID']]/text()[normalize-space()][1]",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "(\\d+)",
+                    1
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "*",
+              "selection": "html",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "<b>ID</b>\\s*(?:&nbsp;|\\s)*([0-9]+)",
+                    1
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "*",
+              "selection": "html",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "getusertorrentlistajax\\('([0-9]+)'\\s*,\\s*'seeding'",
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        },
         "name": {
-          "selector": "//div[@id='bottomnav']//a[contains(@href, 'userdetails')]/strong/text()"
+          "any": [
+            {
+              "selector": "//div[@id='bottomnav']//a[contains(@href, 'userdetails')]/strong/text()"
+            },
+            {
+              "selector": "//td[.//div[contains(@class,'text')][b[normalize-space()='ID']]]/preceding-sibling::td[1]//span/text()"
+            },
+            {
+              "selector": "//title/text()",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "市民详情 - ([^-]+) -",
+                    1
+                  ]
+                },
+                {
+                  "name": "strip"
+                }
+              ]
+            }
+          ]
         },
         "level": {
           "selector": "//div[@id='bottomnav']//a[contains(@href, 'userdetails')]/text()[normalize-space()]",
@@ -174,6 +364,22 @@
                   "name": "byte_size"
                 }
               ]
+            },
+            {
+              "selector": "*",
+              "selection": "html",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "上传量</strong>[:：]\\s*([0-9.,]+\\s*[KMGTPE]?i?B|[0-9.,]+\\s*[KMGTPE]?B)",
+                    1
+                  ]
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
             }
           ]
         },
@@ -204,6 +410,22 @@
                   "name": "byte_size"
                 }
               ]
+            },
+            {
+              "selector": "*",
+              "selection": "html",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "下载量</strong>[:：]\\s*([0-9.,]+\\s*[KMGTPE]?i?B|[0-9.,]+\\s*[KMGTPE]?B)",
+                    1
+                  ]
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
             }
           ]
         },
@@ -214,6 +436,13 @@
               "filters": [
                 {
                   "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
                 }
               ]
             },
@@ -223,8 +452,15 @@
                 {
                   "name": "re_search",
                   "args": [
-                    "([\\d\\.]+)",
+                    "([\\d,.]+)",
                     1
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
                   ]
                 }
               ]
@@ -242,97 +478,138 @@
               ]
             }
           ]
-        }
-      }
-    },
-    "seeding_statistics": {
-      "parser": "XPath",
-      "method": "GET",
-      "path": "/userdetails.php?id={userId}",
-      "headers": {
-        "Referer": "{domain}/userdetails.php?id={userId}"
-      },
-      "disabled_extends": {
-        "headers": true,
-        "list": true
-      },
-      "fields": {
-        "count": {
+        },
+        "seeding_count": {
           "any": [
             {
-              "comment": "方法1：在任何文本中寻找 'x条记录' ",
-              "selector": "//*[contains(text(), '条记录')]/text()",
+              "selector": "//span[contains(@title,'当前做种')]/text()",
               "filters": [
                 {
-                  "name": "re_search",
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
                   "args": [
-                    "(\\d+)",
-                    1
+                    ",",
+                    ""
                   ]
                 }
               ]
             },
             {
-              "comment": "方法2：备用，寻找 '共x条'",
-              "selector": "//*[contains(text(), '共') and contains(text(), '条')]/text()",
+              "selector": "*",
+              "selection": "html",
               "filters": [
                 {
                   "name": "re_search",
                   "args": [
-                    "(\\d+)",
+                    "title=[\"\\']当前做种[\"\\'][^>]*>\\s*([0-9,]+)",
                     1
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
                   ]
                 }
               ]
             }
           ]
         },
-        "size": {
+        "seed_count": {
           "any": [
             {
-              "comment": "方法1：直接找 '总大小' 粗体字后面的内容",
-              "selector": "//b[contains(text(), '总大小')]/following-sibling::text()[1]",
+              "selector": "//span[contains(@title,'当前做种')]/text()",
               "filters": [
-                {
-                  "name": "replace",
-                  "args": [
-                    ":",
-                    ""
-                  ]
-                },
-                {
-                  "name": "replace",
-                  "args": [
-                    "：",
-                    ""
-                  ]
-                },
                 {
                   "name": "strip"
                 },
                 {
-                  "name": "byte_size"
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
                 }
               ]
             },
             {
-              "comment": "方法2：全页搜索 '总大小：xxx' 格式的文本",
-              "selector": "//*[contains(text(), '总大小')]/text()",
+              "selector": "*",
+              "selection": "html",
               "filters": [
                 {
                   "name": "re_search",
                   "args": [
-                    "总大小[：:]\\s*(.*)",
+                    "title=[\"\\']当前做种[\"\\'][^>]*>\\s*([0-9,]+)",
                     1
                   ]
                 },
                 {
-                  "name": "strip"
-                },
-                {
-                  "name": "byte_size"
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
                 }
               ]
+            }
+          ]
+        },
+        "seeding_size": {
+          "selector": "*",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "constant",
+              "args": "0"
+            }
+          ]
+        }
+      }
+    },
+    "seeding_statistics": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/getusertorrentlistajax.php?userid={userId}&type=seeding",
+      "headers": {
+        "Referer": "{domain}/userdetails?id={userId}"
+      },
+      "disabled_extends": {
+        "headers": true
+      },
+      "list": {
+        "selector": "//tr[position()>1]"
+      },
+      "fields": {
+        "count": {
+          "selector": "//body",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "<b>(\\d+)</b>\\s*条记录",
+                1
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            }
+          ]
+        },
+        "size": {
+          "selector": "./td[3]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
             }
           ]
         }

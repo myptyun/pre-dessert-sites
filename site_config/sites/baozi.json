@@ -16,15 +16,43 @@
   },
   "category": {
     "movie": [
-      { "id": 401, "cat": "Movies", "desc": "Movies/电影" },
-      { "id": 407, "cat": "Movies/Sports", "desc": "Sports/体育" }
+      {
+        "id": 401,
+        "cat": "Movies",
+        "desc": "Movies/电影"
+      },
+      {
+        "id": 407,
+        "cat": "Movies/Sports",
+        "desc": "Sports/体育"
+      }
     ],
     "tv": [
-      { "id": 404, "cat": "TV/Documentary", "desc": "Documentaries/纪录片" },
-      { "id": 405, "cat": "TV/Anime", "desc": "Animations/动漫" },
-      { "id": 402, "cat": "TV", "desc": "TV Series/连续剧" },
-      { "id": 403, "cat": "TV", "desc": "TV Shows/综艺" },
-      { "id": 440, "cat": "TV", "desc": "frame/短剧" }
+      {
+        "id": 404,
+        "cat": "TV/Documentary",
+        "desc": "Documentaries/纪录片"
+      },
+      {
+        "id": 405,
+        "cat": "TV/Anime",
+        "desc": "Animations/动漫"
+      },
+      {
+        "id": 402,
+        "cat": "TV",
+        "desc": "TV Series/连续剧"
+      },
+      {
+        "id": 403,
+        "cat": "TV",
+        "desc": "TV Shows/综艺"
+      },
+      {
+        "id": 440,
+        "cat": "TV",
+        "desc": "frame/短剧"
+      }
     ]
   },
   "requests": {
@@ -35,18 +63,32 @@
       "fields": {
         "is_login": {
           "any": [
-            { "selector": "//a[contains(@href, 'logout')]/text()" },
-            { "selector": "//a[contains(@href, 'userdetails')]/b/text()" },
-            { "selector": "//div[@class='user-info-side']/text()" }
+            {
+              "selector": "//a[contains(@href, 'logout')]/text()"
+            },
+            {
+              "selector": "//a[contains(@href, 'userdetails')]/b/text()"
+            },
+            {
+              "selector": "//div[@class='user-info-side']/text()"
+            }
           ],
           "filters": [
-            { "name": "not_blank" }
+            {
+              "name": "not_blank"
+            }
           ]
         },
         "id": {
           "selector": "//a[contains(@href, 'userdetails.php')]/@href",
           "filters": [
-            { "name": "re_search", "args": [ "id=(\\d+)", 1 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
           ]
         },
         "name": {
@@ -55,42 +97,101 @@
         "share_ratio": {
           "selector": "//div[@id='menu_lists_text']/div[contains(span,'分享率')]/text()[last()]",
           "filters": [
-            { "name": "replace", "args": [ "无限", "null" ] },
-            { "name": "strip" }
+            {
+              "name": "replace",
+              "args": [
+                "无限",
+                "null"
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         },
         "uploaded": {
           "selector": "//div[@id='menu_lists_text']/div[contains(span,'上传量')]/text()[last()]",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "downloaded": {
           "selector": "//div[@id='menu_lists_text']/div[contains(span,'下载量')]/text()[last()]",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "bonus": {
           "any": [
             {
-              "selector": "//a[contains(@href,'mybonus.php')]/following-sibling::div/p[1]",
-              "filters": [ { "name": "replace", "args": [ ",", "" ] } ]
+              "selector": "//a[contains(@href,'mybonus.php')]/following-sibling::text()[normalize-space()][1]",
+              "filters": [
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                },
+                {
+                  "name": "strip"
+                }
+              ]
             },
             {
-              "selector": "//div[@id='menu_lists']//p[contains(@style, 'font-size: 24px')]",
-              "filters": [ { "name": "replace", "args": [ ",", "" ] } ]
+              "selector": "//td[normalize-space()='魔力值']/following-sibling::td[1]/text()[normalize-space()][1]",
+              "filters": [
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                },
+                {
+                  "name": "strip"
+                }
+              ]
             },
             {
-              "selector": "//*[@id='menu_lists']/div[6]/div/p[1]",
-              "filters": [ { "name": "replace", "args": [ ",", "" ] } ]
+              "selector": "*",
+              "selection": "html",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "mybonus\\.php[\\s\\S]{0,300}</a>\\s*([\\d,]+(?:\\.\\d+)?)",
+                    1
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                },
+                {
+                  "name": "strip"
+                }
+              ]
             }
           ]
         },
         "join_date": {
           "selector": "//td[contains(text(), '加入日期')]/following-sibling::td[1]",
           "filters": [
-            { "name": "re_search", "args": [ "(\\d{4}-\\d{2}-\\d{2})", 1 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2})",
+                1
+              ]
+            }
           ]
         }
       }
@@ -110,15 +211,31 @@
         "count": {
           "selector": "//div[contains(., '条记录') and contains(., '总大小')]",
           "filters": [
-            { "name": "re_search", "args": [ "(\\d+)", 1 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
           ]
         },
         "size": {
           "selector": "//div[contains(., '条记录') and contains(., '总大小')]",
           "filters": [
-            { "name": "re_search", "args": [ "总大小：(.*)", 1 ] },
-            { "name": "strip" },
-            { "name": "byte_size" }
+            {
+              "name": "re_search",
+              "args": [
+                "总大小：(.*)",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
           ]
         }
       }

@@ -124,7 +124,7 @@
     "seeding_statistics": {
       "parser": "XPath",
       "method": "GET",
-      "path": "/getusertorrentlistajax.php?type=seeding&userid={userId}",
+      "path": "/getusertorrentlistajax.php?userid={userId}&type=seeding",
       "headers": {
         "Referer": "{domain}/userdetails.php?id={userId}"
       },
@@ -146,7 +146,7 @@
           ]
         },
         "size": {
-          "selector": "/td[3]",
+          "selector": "//tr[position()>1]/td[3]",
           "filters": [
             {
               "name": "byte_size"
@@ -268,5 +268,8 @@
         }
       }
     }
+  },
+  "sign_in_required": {
+    "interval_hour": "9-23"
   }
 }
