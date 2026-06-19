@@ -139,7 +139,7 @@
             {
               "name": "re_search",
               "args": [
-                "<b>(\\d+)</b>\\s*条记录",
+                "(\\d+)\\s*条记录",
                 1
               ]
             }
@@ -156,7 +156,26 @@
       }
     },
     "sign_in": {
-      "path": "/signin.php"
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/signin.php",
+      "success_status_codes": [
+        200,
+        302,
+        403
+      ],
+      "fields": {
+        "signed_in": {
+          "selector": "//body",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "regex",
+              "args": "(已经打卡|已打卡|打卡成功|签到成功|已签到|已经签到|今日已签到|今日已签|请不要重复签到|重复签到|已簽到|簽到成功|signed|already)"
+            }
+          ]
+        }
+      }
     },
     "user_basic_info": {
       "parser": "XPath",
@@ -263,6 +282,16 @@
                 "([0-9.]+)",
                 1
               ]
+            }
+          ]
+        },
+        "signed_in": {
+          "selector": "//body",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "regex",
+              "args": "(daily_attendance\\s*\\(\\s*['\"]已经打卡['\"]\\s*\\)|已经打卡|已打卡|今日已签到|今日已签|已签到)"
             }
           ]
         }
