@@ -1,0 +1,661 @@
+{
+  "id": "ipt",
+  "name": "ipt",
+  "domain": "https://iptorrents.com",
+  "additional_domain": [],
+  "public": false,
+  "schema": "NexusPHP",
+  "required": {
+    "cookie": true,
+    "sign_in": true
+  },
+  "meta": {
+    "has_free": true,
+    "has_2x_free": true,
+    "has_cover": true,
+    "shoutbox": true
+  },
+  "category": {
+    "movie": [
+      {
+        "id": 72,
+        "cat": "Movies",
+        "desc": "Movies"
+      },
+      {
+        "id": 87,
+        "cat": "Movies/3D",
+        "desc": "Movie/3D"
+      },
+      {
+        "id": 77,
+        "cat": "Movies/480p",
+        "desc": "Movie/480p"
+      },
+      {
+        "id": 101,
+        "cat": "Movies/4K",
+        "desc": "Movie/4K"
+      },
+      {
+        "id": 89,
+        "cat": "Movies/BD-R",
+        "desc": "Movie/BD-R"
+      },
+      {
+        "id": 90,
+        "cat": "Movies/BD-Rip",
+        "desc": "Movie/BD-Rip"
+      },
+      {
+        "id": 96,
+        "cat": "Movies/Cam",
+        "desc": "Movie/Cam"
+      },
+      {
+        "id": 6,
+        "cat": "Movies/DVD-R",
+        "desc": "Movie/DVD-R"
+      },
+      {
+        "id": 48,
+        "cat": "Movies/HD/Bluray",
+        "desc": "Movie/HD/Bluray"
+      },
+      {
+        "id": 54,
+        "cat": "Movies/Kids",
+        "desc": "Movie/Kids"
+      },
+      {
+        "id": 62,
+        "cat": "Movies/MP4",
+        "desc": "Movie/MP4"
+      },
+      {
+        "id": 38,
+        "cat": "Movies/Non-English",
+        "desc": "Movie/Non-English"
+      },
+      {
+        "id": 68,
+        "cat": "Movies/Packs",
+        "desc": "Movie/Packs"
+      },
+      {
+        "id": 20,
+        "cat": "Movies/Web-DL",
+        "desc": "Movie/Web-DL"
+      },
+      {
+        "id": 100,
+        "cat": "Movies/x265",
+        "desc": "Movie/x265"
+      },
+      {
+        "id": 7,
+        "cat": "Movies/Xvid",
+        "desc": "Movie/Xvid"
+      }
+    ],
+    "tv": [
+      {
+        "id": 73,
+        "cat": "TV",
+        "desc": "TV"
+      },
+      {
+        "id": 26,
+        "cat": "TV/Documentary",
+        "desc": "Documentaries"
+      },
+      {
+        "id": 55,
+        "cat": "TV/Sports",
+        "desc": "Sports"
+      },
+      {
+        "id": 78,
+        "cat": "TV/480p",
+        "desc": "TV/480p"
+      },
+      {
+        "id": 23,
+        "cat": "TV/BD",
+        "desc": "TV/BD"
+      },
+      {
+        "id": 24,
+        "cat": "TV/DVD-R",
+        "desc": "TV/DVD-R"
+      },
+      {
+        "id": 25,
+        "cat": "TV/DVD-Rip",
+        "desc": "TV/DVD-Rip"
+      },
+      {
+        "id": 66,
+        "cat": "TV/Mobile",
+        "desc": "TV/Mobile"
+      },
+      {
+        "id": 82,
+        "cat": "TV/Non-English",
+        "desc": "TV/Non-English"
+      },
+      {
+        "id": 65,
+        "cat": "TV/Packs",
+        "desc": "TV/Packs"
+      },
+      {
+        "id": 83,
+        "cat": "TV/Packs/Non-English",
+        "desc": "TV/Packs/Non-English"
+      },
+      {
+        "id": 79,
+        "cat": "TV/SD/x264",
+        "desc": "TV/SD/x264"
+      },
+      {
+        "id": 22,
+        "cat": "TV/Web-DL",
+        "desc": "TV/Web-DL"
+      },
+      {
+        "id": 5,
+        "cat": "TV/x264",
+        "desc": "TV/x264"
+      },
+      {
+        "id": 99,
+        "cat": "TV/x265",
+        "desc": "TV/x265"
+      },
+      {
+        "id": 4,
+        "cat": "TV/Xvid",
+        "desc": "TV/Xvid"
+      },
+      {
+        "id": 60,
+        "cat": "TV/Anime",
+        "desc": "Anime"
+      }
+    ],
+    "game": [
+      {
+        "id": 74,
+        "cat": "Games",
+        "desc": "Games"
+      },
+      {
+        "id": 2,
+        "cat": "Games/Mixed",
+        "desc": "Games/Mixed"
+      },
+      {
+        "id": 47,
+        "cat": "Games/Nintendo",
+        "desc": "Games/Nintendo"
+      },
+      {
+        "id": 43,
+        "cat": "Games/PC-ISO",
+        "desc": "Games/PC-ISO"
+      },
+      {
+        "id": 45,
+        "cat": "Games/PC-Rip",
+        "desc": "Games/PC-Rip"
+      },
+      {
+        "id": 71,
+        "cat": "Games/Playstation",
+        "desc": "Games/Playstation"
+      },
+      {
+        "id": 50,
+        "cat": "Games/Wii",
+        "desc": "Games/Wii"
+      },
+      {
+        "id": 44,
+        "cat": "Games/Xbox",
+        "desc": "Games/Xbox"
+      }
+    ],
+    "music": [
+      {
+        "id": 75,
+        "cat": "Music",
+        "desc": "Music"
+      },
+      {
+        "id": 3,
+        "cat": "Music/Audio",
+        "desc": "Music/Audio"
+      },
+      {
+        "id": 80,
+        "cat": "Music/Flac",
+        "desc": "Music/Flac"
+      },
+      {
+        "id": 93,
+        "cat": "Music/Packs",
+        "desc": "Music/Packs"
+      },
+      {
+        "id": 37,
+        "cat": "Music/Video",
+        "desc": "Music/Video"
+      },
+      {
+        "id": 21,
+        "cat": "Podcast",
+        "desc": "Podcast"
+      }
+    ],
+    "book": [
+      {
+        "id": 64,
+        "cat": "AudioBook",
+        "desc": "AudioBook"
+      },
+      {
+        "id": 35,
+        "cat": "Books",
+        "desc": "Books"
+      },
+      {
+        "id": 102,
+        "cat": "Books/Non-English",
+        "desc": "Books/Non-English"
+      },
+      {
+        "id": 94,
+        "cat": "Comics",
+        "desc": "Comics"
+      },
+      {
+        "id": 95,
+        "cat": "Educational",
+        "desc": "Educational"
+      },
+      {
+        "id": 92,
+        "cat": "Magazines / Newspapers",
+        "desc": "Magazines / Newspapers"
+      }
+    ],
+    "software": [
+      {
+        "id": 1,
+        "cat": "Appz",
+        "desc": "Appz"
+      },
+      {
+        "id": 86,
+        "cat": "Appz/Non-English",
+        "desc": "Appz/Non-English"
+      },
+      {
+        "id": 98,
+        "cat": "Fonts",
+        "desc": "Fonts"
+      },
+      {
+        "id": 69,
+        "cat": "Mac",
+        "desc": "Mac"
+      },
+      {
+        "id": 58,
+        "cat": "Mobile",
+        "desc": "Mobile"
+      }
+    ],
+    "picture": [
+      {
+        "id": 36,
+        "cat": "Pics/Wallpapers",
+        "desc": "Pics/Wallpapers"
+      }
+    ],
+    "adult": [
+      {
+        "id": 88,
+        "cat": "XXX",
+        "desc": "XXX"
+      },
+      {
+        "id": 85,
+        "cat": "XXX/Magazines",
+        "desc": "XXX/Magazines"
+      },
+      {
+        "id": 8,
+        "cat": "XXX/Movie",
+        "desc": "XXX/Movie"
+      },
+      {
+        "id": 81,
+        "cat": "XXX/Movie/0Day",
+        "desc": "XXX/Movie/0Day"
+      },
+      {
+        "id": 91,
+        "cat": "XXX/Packs",
+        "desc": "XXX/Packs"
+      },
+      {
+        "id": 84,
+        "cat": "XXX/Pics/Wallpapers",
+        "desc": "XXX/Pics/Wallpapers"
+      }
+    ],
+    "other": [
+      {
+        "id": 76,
+        "cat": "Miscellaneous",
+        "desc": "Miscellaneous"
+      }
+    ]
+  },
+  "requests": {
+    "user_basic_info": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/t",
+      "fields": {
+        "is_login": {
+          "selector": "//form[contains(@action, 'lout.php')] | //a[contains(@class, 'uname') and contains(@href, '/u/')]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        },
+        "id": {
+          "selector": "//a[contains(@class, 'uname') and contains(@href, '/u/')]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "/u/(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "name": {
+          "selector": "//a[contains(@class, 'uname') and contains(@href, '/u/')]/text()"
+        },
+        "uploaded": {
+          "selector": "//div[normalize-space()='Uploaded']/following-sibling::text()[normalize-space()][1]",
+          "filters": [
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "downloaded": {
+          "selector": "//div[normalize-space()='Downloaded']/following-sibling::text()[normalize-space()][1]",
+          "filters": [
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "ratio": {
+          "selector": "//span[contains(@class, 'c_ratio')]/text()[normalize-space()]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "bonus": {
+          "selector": "//a[contains(@href, 'mybonus.php')]/text()[normalize-space()]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        }
+      }
+    },
+    "user_details": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/user.php?u={userId}",
+      "fields": {
+        "level": {
+          "selector": "//span[contains(@class, 'up-class-badge')]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(Power User|User|VIP|Uploader|Moderator|Administrator|Sysop)",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "join_at": {
+          "selector": "//span[contains(text(), 'Join Date')]/../span[contains(@class, 'up-field-value')]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        },
+        "last_accessed": {
+          "selector": "//span[contains(text(), 'Last Seen')]/../span[contains(@class, 'up-field-value')]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        }
+      }
+    },
+    "search": {
+      "parser": "CssSelector",
+      "method": "GET",
+      "path": "/t",
+      "params": {
+        "q": [
+          "{keyword}"
+        ]
+      },
+      "disabled_extends": {
+        "list": true,
+        "fields": true
+      },
+      "list": {
+        "selector": "table#torrents tr:has(a[href^='/download.php/'])"
+      },
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(2) a[href^='/t/']",
+          "attribute": "href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "/t/(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "category": {
+          "selector": "td:nth-child(1)",
+          "attribute": "class",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "p(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "title": {
+          "selector": "td:nth-child(2) a[href^='/t/']"
+        },
+        "details": {
+          "selector": "td:nth-child(2) a[href^='/t/']",
+          "attribute": "href"
+        },
+        "download": {
+          "selector": "a[href^='/download.php/']",
+          "attribute": "href"
+        },
+        "size": {
+          "selector": "td:nth-child(6)",
+          "filters": [
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "grabs": {
+          "selector": "td:nth-child(7)"
+        },
+        "seeders": {
+          "selector": "td:nth-child(8)"
+        },
+        "leechers": {
+          "selector": "td:nth-child(9)"
+        },
+        "description": {
+          "selector": "td:nth-child(2) div.sub"
+        },
+        "labels": {
+          "selector": "td:nth-child(2) span.tag",
+          "array": true
+        },
+        "hr_days": {
+          "filters": [
+            {
+              "name": "constant",
+              "args": "1"
+            }
+          ]
+        }
+      }
+    },
+    "details": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/t/{id}",
+      "disabled_extends": {
+        "fields": true
+      },
+      "fields": {
+        "cover": {
+          "selector": "//img[contains(@style, 'img.localcdn.net/m/')]/@style",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "url\\((https?://img\\.localcdn\\.net/m/[^)]+)\\)",
+                1
+              ]
+            }
+          ]
+        },
+        "imdb_id": {
+          "selector": "//a[contains(@href, 'imdb.com/title/')]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(tt\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "tmdb_id": {
+          "selector": "//a[contains(@href, 'themoviedb.org/movie/') or contains(@href, 'themoviedb.org/tv/')]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "themoviedb\\.org/(?:movie|tv)/(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "date_added": {
+          "selector": "//span[contains(@class, 'elapsedDate') and @title][1]/@title",
+          "filters": [
+            {
+              "name": "timestamp"
+            }
+          ]
+        }
+      }
+    },
+    "seeding_statistics": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/user.php?u={userId}",
+      "disabled_extends": {
+        "headers": true,
+        "list": true
+      },
+      "fields": {
+        "count": {
+          "selector": "//span[contains(text(), 'Seeding')]/../span[contains(@class, 'up-field-value')]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "size": {
+          "selector": "//body",
+          "filters": [
+            {
+              "name": "constant",
+              "args": "0"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "my_hr": {
+    "path": "/myhr.php?status=1"
+  }
+}
