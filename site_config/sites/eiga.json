@@ -2,9 +2,7 @@
   "id": "eiga",
   "name": "ACM",
   "domain": "https://eiga.moi",
-  "additional_domain": [
-    "https://anime-no-index.com"
-  ],
+  "additional_domain": [],
   "encoding": "UTF-8",
   "public": false,
   "schema": "NexusPHP",
@@ -48,42 +46,92 @@
       "path": "/",
       "fields": {
         "is_login": {
-          "selector": "//a[contains(@href,'/logout')]",
-          "filters": [
+          "any": [
             {
-              "name": "not_blank"
+              "selector": "//a[contains(@href,'/logout')]",
+              "filters": [
+                {
+                  "name": "not_blank"
+                }
+              ]
+            },
+            {
+              "selector": "//form[contains(@action,'/logout')]",
+              "filters": [
+                {
+                  "name": "not_blank"
+                }
+              ]
+            },
+            {
+              "selector": "//a[contains(@href,'/users/')]",
+              "filters": [
+                {
+                  "name": "not_blank"
+                }
+              ]
             }
           ]
         },
         "id": {
-          "selector": "//a[contains(@href,'/users/') and (contains(@href,'/conversations') or contains(@class,'username') or contains(@class,'user'))]/@href | //meta[@name='user-login']/@content | //a[contains(@href,'/users/')]/@href",
-          "filters": [
+          "any": [
             {
-              "name": "re_search",
-              "args": [
-                "/users/([^/?#]+)/",
-                1
+              "selector": "//a[contains(@href,'/users/') and contains(@href,'/conversations')][1]/@href",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "/users/([^/?#]+)/conversations",
+                    1
+                  ]
+                },
+                {
+                  "name": "strip"
+                }
               ]
             },
+            {
+              "selector": "//a[contains(@href,'/users/') and .//span[contains(@class,'text-bold')]][1]/@href",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "/users/([^/?#]+)",
+                    1
+                  ]
+                },
+                {
+                  "name": "strip"
+                }
+              ]
+            },
+            {
+              "selector": "//a[contains(@href,'/users/') and not(contains(substring-after(@href,'/users/'),'/')) and not(contains(@href,'?'))][1]/@href",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "/users/([^/?#]+)",
+                    1
+                  ]
+                },
+                {
+                  "name": "strip"
+                }
+              ]
+            }
+          ]
+        },
+        "name": {
+          "selector": "//a[contains(@href,'/users/') and not(contains(substring-after(@href,'/users/'),'/')) and not(contains(@href,'?'))]//span[contains(@class,'text-bold')]/text() | //a[contains(@href,'/users/') and not(contains(substring-after(@href,'/users/'),'/')) and not(contains(@href,'?'))]/text()",
+          "filters": [
             {
               "name": "strip"
             }
           ]
         },
-        "name": {
-          "selector": "//ul[contains(@class, 'left-navbar')]//a[contains(@href, '/users/')][1]/@href",
-          "filters": [
-            {
-              "name": "re_search",
-              "args": [
-                "/users/([^/]+)",
-                1
-              ]
-            }
-          ]
-        },
         "uploaded": {
-          "selector": "//li//span[contains(@title, '上传')]/text()[normalize-space()]",
+          "selector": "//li[contains(@title, '上传')]//a/text()[normalize-space()]",
           "filters": [
             {
               "name": "replace",
@@ -98,7 +146,7 @@
           ]
         },
         "downloaded": {
-          "selector": "//li//span[contains(@title, '下载')]/text()[normalize-space()]",
+          "selector": "//li[contains(@title, '下载')]//a/text()[normalize-space()]",
           "filters": [
             {
               "name": "replace",
@@ -113,7 +161,7 @@
           ]
         },
         "ratio": {
-          "selector": "//li//span[contains(@title, '分享率')]/text()[normalize-space()]",
+          "selector": "//li[contains(@title, '分享率')]//a/text()[normalize-space()]",
           "filters": [
             {
               "name": "replace",
@@ -125,12 +173,33 @@
           ]
         },
         "bonus": {
-          "selector": "//li//span[contains(@title, '魔力')]//a/text()",
+          "selector": "//li[contains(@title, '魔力')]//a/text()[normalize-space()]",
           "filters": [
             {
               "name": "replace",
               "args": [
+                " ",
+                ""
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                ""
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
                 " ",
+                ""
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                " ",
                 ""
               ]
             },
@@ -154,43 +223,39 @@
       "path": "/users/{userId}",
       "fields": {
         "level": {
-          "selector": "//div[contains(@class,'header')]//h4[contains(text(),'组别')]/span/text()"
-        },
-        "level_icon": {
-          "selector": "//div[contains(@class,'header')]//img[@class='img-circle']/@src"
-        },
-        "join_at": {
-          "selector": "//h4[contains(text(),'注册日期')]/text()",
+          "selector": "//span[contains(@class,'profile__username')]//a[contains(@class,'user-tag__link')]/@title | //a[contains(@class,'user-tag__link') and contains(@href,'/users/')]/@title",
           "filters": [
             {
-              "name": "re_search",
-              "args": [
-                "([A-Za-z]{3}\\s+\\d{2}\\s+\\d{4})",
-                1
-              ]
-            },
+              "name": "strip"
+            }
+          ]
+        },
+        "level_icon": {
+          "selector": "//span[contains(@class,'profile__username')]//img/@src | //a[contains(@class,'user-tag__link') and contains(@href,'/users/')]//img/@src",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "join_at": {
+          "selector": "//time[contains(@class,'profile__registration')]/@datetime | //time[contains(@class,'profile__registration')]/@title",
+          "filters": [
             {
               "name": "timestamp",
               "args": [
-                "Jan 02 2006"
+                "2006-01-02 15:04:05"
               ]
             }
           ]
         },
         "last_accessed": {
-          "selector": "//td[contains(text(),'上次登录时间')]/following-sibling::td[1]",
+          "selector": "//dt[contains(normalize-space(.),'上次登录时间') or contains(normalize-space(.),'Last login')]/following-sibling::dd[1]//time/@datetime | //dt[contains(normalize-space(.),'Last action') or contains(normalize-space(.),'最近活动')]/following-sibling::dd[1]//time/@datetime",
           "filters": [
-            {
-              "name": "re_search",
-              "args": [
-                "([A-Za-z]{3},\\s+[A-Za-z]{3}\\s+\\d{1,2},\\s+\\d{4}\\s+\\d{1,2}:\\d{2}\\s+[AP]M)",
-                1
-              ]
-            },
             {
               "name": "timestamp",
               "args": [
-                "Mon, Jan 2, 2006 3:04 PM"
+                "2006-01-02 15:04:05"
               ]
             }
           ]
@@ -200,10 +265,10 @@
     "notice": {
       "parser": "XPath",
       "method": "GET",
-      "path": "articles",
+      "path": "/articles",
       "fields": {
         "content": {
-          "selector": "//div[@class='well'][1]//p[contains(@style,'margin-top')]",
+          "selector": "//article[contains(@class, 'article-preview')]",
           "filters": [
             {
               "name": "strip"
@@ -220,51 +285,203 @@
         "list": true
       },
       "fields": {
-        "size": {
-          "selector": "//td[contains(text(),'做种体积')]/following-sibling::td[1]/span/text()",
-          "filters": [
-            {
-              "name": "byte_size"
-            }
-          ]
-        },
         "count": {
-          "selector": "//span[contains(text(),'总做种数量')]/span/text()",
-          "filters": [
+          "any": [
             {
-              "name": "replace",
-              "args": [
-                ",",
-                ""
+              "selector": "//a[contains(@href,'/active?seeding=include')]/ancestor::dt/following-sibling::dd[1]/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    ""
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    ""
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                }
               ]
             },
             {
-              "name": "strip"
+              "selector": "//li[contains(@class,'ratio-bar__seeding')]//a/text()[normalize-space()]",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    ""
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    ""
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "//dt[.//a[contains(@href,'/active?seeding=include')] or contains(normalize-space(.),'总做种数量')]/following-sibling::dd[1]/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    ""
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    ""
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    ",",
+                    ""
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "size": {
+          "any": [
+            {
+              "selector": "//abbr[contains(@title,'做种体积') or contains(@title,'Seeding Size')]/ancestor::dt/following-sibling::dd[1]/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
+            },
+            {
+              "selector": "//dt[contains(normalize-space(.),'做种体积') or contains(normalize-space(.),'Seeding Size')]/following-sibling::dd[1]/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
+            },
+            {
+              "selector": "//section[.//h2[contains(normalize-space(.),'Traffic')]]//dt[contains(normalize-space(.),'种子 下载')]/following-sibling::dd[1]/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "replace",
+                  "args": [
+                    " ",
+                    " "
+                  ]
+                },
+                {
+                  "name": "byte_size"
+                }
+              ]
             }
           ]
         }
       }
     },
     "search": {
-      "path": "torrents",
+      "path": "/torrents",
       "params": {
         "name": [
           "{keyword}"
         ],
-        "page": [
-          "{page}"
-        ],
         "perPage": [
-          "100"
+          "25"
+        ],
+        "search_mode": [
+          "0"
+        ],
+        "notnewword": [
+          "1"
+        ],
+        "view": [
+          "card"
         ]
       },
       "list": {
-        "selector": ".torrent-list > tr"
+        "selector": "//article[contains(@class,'torrent-card')]"
       },
       "fields": {
         "id": {
-          "selector": "a.view-torrent",
-          "attribute": "href",
+          "selector": ".//a[contains(@class,'torrent-card__link')][1]/@href",
           "filters": [
             {
               "name": "re_search",
@@ -276,72 +493,217 @@
           ]
         },
         "cover": {
-          "selector": "td.torrent-listings-poster > div > a > img",
-          "attribute": "src"
+          "selector": ".//img[contains(@class,'torrent-card__image')][1]/@src | .//img[contains(@class,'torrent-card__image')][1]/@data-src"
         },
         "title": {
-          "selector": "a.view-torrent"
-        },
-        "details": {
-          "selector": "a.view-torrent",
-          "attribute": "href"
-        },
-        "download": {
-          "selector": "a[href*=\"/torrents/download/\"]",
-          "attribute": "href"
-        },
-        "size": {
-          "selector": "td:nth-child(6)",
-          "filters": [
-            {
-              "name": "byte_size"
-            }
-          ]
-        },
-        "seeders": {
-          "selector": "td:nth-child(7) a"
-        },
-        "leechers": {
-          "selector": "td:nth-child(8) a"
-        },
-        "grabs": {
-          "selector": "td:nth-child(9) a"
-        },
-        "downloadvolumefactor": {
-          "case": {
-            "i.fa-globe": 0,
-            "i.fa-star": 0,
-            "*": 1
-          }
-        },
-        "uploadvolumefactor": {
-          "case": {
-            "i.fa-gem": 2,
-            "*": 1
-          }
-        }
-      }
-    },
-    "messages": {
-      "parser": "XPath",
-      "method": "GET",
-      "list": {
-        "selector": "//table[contains(@class, 'data-table')]/tbody/tr[.//a[contains(@href,'/conversations/')]]"
-      },
-      "fields": {
-        "title": {
-          "selector": "./td[2]/a",
+          "selector": ".//a[contains(@class,'torrent-card__link')][1]",
           "filters": [
             {
               "name": "strip"
             }
           ]
         },
-        "link": {
-          "selector": "./td[2]/a/@href"
+        "description": {
+          "selector": ".//p[contains(@class,'torrent-card__plot')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
+        "subtitle": {
+          "selector": ".//h2[contains(@class,'torrent-card__title')]/a",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                "\n",
+                " "
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "\t",
+                " "
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "/\\s*([^0-9]+?)\\s+(?:19|20)\\d{2}",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "details": {
+          "selector": ".//a[contains(@class,'torrent-card__link')][1]/@href"
+        },
+        "download": {
+          "selector": ".//footer[contains(@class,'torrent-card__footer')]//a[contains(@href,'/download/') or contains(@href,'/torrents/download/')][1]/@href"
+        },
+        "size": {
+          "selector": ".//span[contains(@class,'torrent-card__size')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                " "
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                " "
+              ]
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "seeders": {
+          "selector": ".//a[contains(@class,'torrent-card__seeds')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "leechers": {
+          "selector": ".//a[contains(@class,'torrent-card__leeches')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "grabs": {
+          "selector": ".//a[contains(@class,'torrent-card__completed')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "date_added": {
+          "selector": ".//footer[contains(@class,'torrent-card__footer')]//time/@datetime | .//footer[contains(@class,'torrent-card__footer')]//time/@title",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "2006-01-02 15:04:05"
+              ]
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+8"
+              ]
+            }
+          ]
+        },
+        "time": {
+          "selector": ".//footer[contains(@class,'torrent-card__footer')]//time/@datetime | .//footer[contains(@class,'torrent-card__footer')]//time/@title",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "2006-01-02 15:04:05"
+              ]
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+8"
+              ]
+            }
+          ]
+        },
+        "created_at": {
+          "selector": ".//footer[contains(@class,'torrent-card__footer')]//time/@datetime | .//footer[contains(@class,'torrent-card__footer')]//time/@title",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "2006-01-02 15:04:05"
+              ]
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "+8"
+              ]
+            }
+          ]
+        },
+        "category": {
+          "selector": ".//span[contains(@class,'torrent-card__category')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        }
+      },
+      "parser": "XPath",
+      "method": "GET",
+      "disabled_extends": {
+        "fields": true,
+        "field": true
+      }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "list": {
+        "selector": "//table[contains(@class,'data-table')]/tbody/tr[.//a[contains(@href,'/conversations/')]]"
+      },
+      "fields": {
         "id": {
-          "selector": "./td[2]/a/@href",
+          "selector": "./td[2]/a[contains(@href,'/conversations/')]/@href",
           "filters": [
             {
               "name": "re_search",
@@ -352,8 +714,19 @@
             }
           ]
         },
+        "title": {
+          "selector": "./td[2]/a[contains(@href,'/conversations/')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": "./td[2]/a[contains(@href,'/conversations/')]/@href"
+        },
         "sender": {
-          "selector": "./td[1]//span[contains(@class, 'user-tag')]/a | ./td[1]//a[contains(@href,'/users/')]",
+          "selector": "./td[1]//span[contains(@class,'user-tag')]/a | ./td[1]//a[contains(@href,'/users/')]",
           "filters": [
             {
               "name": "strip"
@@ -369,7 +742,7 @@
           ]
         },
         "unread": {
-          "selector": "./td[contains(@class,'unread') or .//i[contains(@class,'text-red') or contains(@class,'fa-envelope') and not(contains(@class,'open'))]]",
+          "selector": "./td[5]//i[not(contains(@class,'text-green')) and (contains(@title,'未读') or contains(@title,'Unread') or contains(@class,'fa-envelope'))] | ./td[contains(@class,'unread')]",
           "filters": [
             {
               "name": "not_blank"
@@ -379,5 +752,6 @@
       },
       "path": "/users/{userId}/conversations"
     }
-  }
+  },
+  "first_page_offset": 1
 }
