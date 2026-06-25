@@ -467,14 +467,6 @@
         "date": {
           "selector": "created_at"
         },
-        "unread": {
-          "selector": "read_at",
-          "filters": [
-            {
-              "name": "is_empty"
-            }
-          ]
-        },
         "link": {
           "selector": "id",
           "filters": [

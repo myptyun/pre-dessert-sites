@@ -17,16 +17,40 @@
   },
   "category": {
     "movie": [
-      { "id": 1, "cat": "Movies", "desc": "Movie" }
+      {
+        "id": 1,
+        "cat": "Movies",
+        "desc": "Movie"
+      }
     ],
     "tv": [
-      { "id": 2, "cat": "TV", "desc": "TV Show" }
+      {
+        "id": 2,
+        "cat": "TV",
+        "desc": "TV Show"
+      }
     ],
     "other": [
-      { "id": 3, "cat": "Other", "desc": "FANRES" },
-      { "id": 5, "cat": "Other", "desc": "Trailer" },
-      { "id": 8, "cat": "Other", "desc": "Other" },
-      { "id": 9, "cat": "Other", "desc": "Live Concert" }
+      {
+        "id": 3,
+        "cat": "Other",
+        "desc": "FANRES"
+      },
+      {
+        "id": 5,
+        "cat": "Other",
+        "desc": "Trailer"
+      },
+      {
+        "id": 8,
+        "cat": "Other",
+        "desc": "Other"
+      },
+      {
+        "id": 9,
+        "cat": "Other",
+        "desc": "Live Concert"
+      }
     ]
   },
   "requests": {
@@ -38,15 +62,39 @@
         "is_login": {
           "selector": "//form[@action='https://blutopia.cc/logout']//button/text()",
           "filters": [
-            { "name": "re_search", "args": [ "(注销|Logout)", 0 ] },
-            { "name": "replace", "args": [ "注销", "true" ] },
-            { "name": "replace", "args": [ "Logout", "true" ] }
+            {
+              "name": "re_search",
+              "args": [
+                "(注销|Logout)",
+                0
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "注销",
+                "true"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "Logout",
+                "true"
+              ]
+            }
           ]
         },
         "id": {
           "selector": "//a[contains(@class, 'top-nav__username--highresolution')]/@href",
           "filters": [
-            { "name": "re_search", "args": [ "/users/([^/]+)", 1 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "/users/([^/]+)",
+                1
+              ]
+            }
           ]
         },
         "name": {
@@ -55,26 +103,48 @@
         "uploaded": {
           "selector": "//li[contains(@class, 'ratio-bar__uploaded')]/a/text()[not(parent::time)]",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "downloaded": {
           "selector": "//li[contains(@class, 'ratio-bar__downloaded')]/a/text()[not(parent::time)]",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "ratio": {
           "selector": "//li[contains(@class, 'ratio-bar__ratio')]/a/text()",
           "filters": [
-            { "name": "replace", "args": [ ",", "" ] }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            }
           ]
         },
         "bonus": {
           "selector": "//li[contains(@class, 'ratio-bar__points')]/a/text()",
           "filters": [
-            { "name": "replace", "args": [ " ", "" ] },
-            { "name": "replace", "args": [ ",", "" ] }
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                ""
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            }
           ]
         }
       }
@@ -93,13 +163,17 @@
         "join_at": {
           "selector": "//time[contains(@class, 'profile__registration')]/@datetime",
           "filters": [
-            { "name": "timestamp" }
+            {
+              "name": "timestamp"
+            }
           ]
         },
         "last_accessed": {
           "selector": "//dt[contains(text(),'上次登录时间')]/following-sibling::dd[1]/time/@datetime",
           "filters": [
-            { "name": "timestamp" }
+            {
+              "name": "timestamp"
+            }
           ]
         }
       }
@@ -115,14 +189,24 @@
         "size": {
           "selector": "(//dt[abbr[contains(@title, '做种体积')]]/following-sibling::dd[1]/text())[1]",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "count": {
           "selector": "/html/body/header/nav[1]/div[2]/ul[1]/li[3]/a/text()",
           "filters": [
-            { "name": "replace", "args": [ ",", "" ] },
-            { "name": "strip" }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         }
       }
@@ -131,7 +215,9 @@
       "method": "GET",
       "path": "torrents?perPage=100",
       "params": {
-        "name": [ "{keyword}" ]
+        "name": [
+          "{keyword}"
+        ]
       },
       "list": {
         "selector": "table.data-table > tbody > tr"
@@ -141,7 +227,13 @@
           "selector": "a.torrent-search--list__name",
           "attribute": "href",
           "filters": [
-            { "name": "re_search", "args": [ "\\d+", 0 ] }
+            {
+              "name": "re_search",
+              "args": [
+                "\\d+",
+                0
+              ]
+            }
           ]
         },
         "title": {
@@ -159,13 +251,17 @@
           "selector": "td.torrent-search--list__age > time",
           "attribute": "datetime",
           "filters": [
-            { "name": "timestamp" }
+            {
+              "name": "timestamp"
+            }
           ]
         },
         "size": {
           "selector": "td.torrent-search--list__size > span",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "seeders": {
@@ -188,6 +284,89 @@
             "i.torrent-icons__double-upload": 2,
             "*": 1
           }
+        }
+      }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "users/{userId}/conversations",
+      "params": {
+        "page": [
+          "{page}"
+        ]
+      },
+      "list": {
+        "selector": "//table[contains(@class,'data-table') or contains(@class,'table')]/tbody/tr[.//a[contains(@href,'/conversations/')]]"
+      },
+      "fields": {
+        "title": {
+          "selector": ".//a[contains(@href,'/conversations/')][1]/text()",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": ".//a[contains(@href,'/conversations/')][1]/@href"
+        },
+        "id": {
+          "selector": ".//a[contains(@href,'/conversations/')][1]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "/conversations/(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "sender": {
+          "selector": "./td[1]//a/text()|./td[1]//span/text()",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": ".//time/@datetime|./td[3]/text()",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "unread": {
+          "selector": ".//i[contains(@title,'未读') or contains(@class,'text-red')] | .//*[contains(@class,'unread') or contains(text(),'未读')]"
+        }
+      }
+    },
+    "message_detail": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "users/{userId}/conversations/{id}",
+      "fields": {
+        "title": {
+          "selector": "//h1/text()|//h2/text()|//*[contains(@class,'panel-title')]/text()",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "content": {
+          "selector": "//*[contains(@class,'conversation') or contains(@class,'message') or contains(@class,'panel-body') or contains(@class,'card-body')]"
+        },
+        "date": {
+          "selector": "//time/@datetime",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         }
       }
     }
