@@ -51,7 +51,25 @@
   },
   "requests": {
     "sign_in": {
-      "path": "/index.php?action=addbonus"
+      "path": "/index.php?action=addbonus",
+      "parser": "XPath",
+      "method": "GET",
+      "success_status_codes": [
+        200,
+        302
+      ],
+      "fields": {
+        "signed_in": {
+          "selector": "//body",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "regex",
+              "args": "(已签到|签到成功|已经签到|今日已签到|请不要重复签到|重复签到|魔力值|分享率|bonus)"
+            }
+          ]
+        }
+      }
     },
     "search": {
       "fields": {
@@ -126,6 +144,20 @@
             },
             {
               "name": "byte_size"
+            }
+          ]
+        }
+      }
+    },
+    "user_basic_info": {
+      "fields": {
+        "signed_in": {
+          "selector": "//body",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "regex",
+              "args": "(已签到|签到成功|已经签到|今日已签到|请不要重复签到|重复签到|魔力值|分享率|bonus)"
             }
           ]
         }

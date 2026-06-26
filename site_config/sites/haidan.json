@@ -122,9 +122,31 @@
       }
     },
     "seeding_statistics": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/getusertorrentlistajax.php?userid={userId}&type=seeding",
+      "headers": {
+        "Referer": "{domain}/userdetails.php?id={userId}"
+      },
+      "disabled_extends": {
+        "headers": true,
+        "list": true
+      },
       "fields": {
+        "count": {
+          "selector": "//body",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)\\s*条记录",
+                1
+              ]
+            }
+          ]
+        },
         "size": {
-          "selector": "/td[3]",
+          "selector": "//tr[position()>1]/td[3]",
           "filters": [
             {
               "name": "byte_size"
@@ -134,7 +156,149 @@
       }
     },
     "sign_in": {
-      "path": "/signin.php"
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/signin.php",
+      "success_status_codes": [
+        200,
+        302,
+        403
+      ],
+      "fields": {
+        "signed_in": {
+          "selector": "//body",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "regex",
+              "args": "(已经打卡|已打卡|打卡成功|签到成功|已签到|已经签到|今日已签到|今日已签|请不要重复签到|重复签到|已簽到|簽到成功|signed|already)"
+            }
+          ]
+        }
+      }
+    },
+    "user_basic_info": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/",
+      "fields": {
+        "is_login": {
+          "selector": "//a[contains(@href, \"userdetails.php?id=\") and contains(., \"xiaojunxiang\")]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        },
+        "id": {
+          "selector": "//a[contains(@href, \"userdetails.php?id=\")]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "name": {
+          "selector": "//a[contains(@href, \"userdetails.php?id=\")]/b/text()"
+        },
+        "uploaded": {
+          "selector": "//font[contains(@class,\"color_uploaded\")]/following-sibling::text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "downloaded": {
+          "selector": "//font[contains(@class,\"color_downloaded\")]/following-sibling::text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "ratio": {
+          "selector": "//font[contains(@class,\"color_ratio\")]/following-sibling::text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "Inf",
+                "0"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "∞",
+                "0"
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "([0-9.]+)",
+                1
+              ]
+            }
+          ]
+        },
+        "bonus": {
+          "selector": "//*[@id=\"magic_num\"]/text()",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "([0-9.]+)",
+                1
+              ]
+            }
+          ]
+        },
+        "signed_in": {
+          "selector": "//body",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "regex",
+              "args": "(daily_attendance\\s*\\(\\s*['\"]已经打卡['\"]\\s*\\)|已经打卡|已打卡|今日已签到|今日已签|已签到)"
+            }
+          ]
+        }
+      }
     }
+  },
+  "sign_in_required": {
+    "interval_hour": "9-23"
   }
 }

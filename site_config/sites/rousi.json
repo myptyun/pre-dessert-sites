@@ -3,7 +3,7 @@
   "name": "Rousi",
   "domain": "https://rousi.pro",
   "encoding": "UTF-8",
-  "schema": "NexusPHP",
+  "schema": "rousi",
   "reuse_schema": "NexusPHP",
   "required": {
     "cookie": false,
@@ -14,6 +14,7 @@
   },
   "public": false,
   "category": {
+    "query": "category",
     "movie": [
       {
         "id": "movie",
@@ -46,20 +47,27 @@
     "search": {
       "parser": "JsonPath",
       "method": "GET",
-      "path": "/api/torrent/list",
+      "path": "/api/torrent/search",
       "params": {
-        "page": ["0"],
-        "page_size": ["100"],
-        "sort": ["created_at DESC"],
-        "query": ["{keyword}"],
-        "category": ["{category}"]
+        "page": [
+          "{page}"
+        ],
+        "page_size": [
+          "100"
+        ],
+        "sort": [
+          "created_at DESC"
+        ],
+        "query": [
+          "{keyword}"
+        ]
       },
       "list": {
         "selector": "data.torrents"
       },
       "fields": {
         "id": {
-          "selector": "id"
+          "selector": "uuid"
         },
         "category": {
           "selector": "type"
@@ -68,7 +76,7 @@
           "selector": "title"
         },
         "details": {
-          "selector": "id",
+          "selector": "uuid",
           "filters": [
             {
               "name": "append_left",
@@ -77,15 +85,15 @@
           ]
         },
         "download": {
-          "selector": "info_hash",
+          "selector": "uuid",
           "filters": [
             {
               "name": "append_left",
-              "args": "/download/"
+              "args": "/api/torrent/"
             },
             {
               "name": "append_right",
-              "args": "/{passkey}"
+              "args": "/download/{passkey}"
             }
           ]
         },
@@ -142,15 +150,6 @@
             }
           ]
         },
-        "signed_in": {
-          "selector": "code",
-          "filters": [
-            {
-              "name": "eq",
-              "args": "0"
-            }
-          ]
-        },
         "id": {
           "selector": "data.stats.username"
         },
@@ -181,43 +180,113 @@
         },
         "leeching_count": {
           "selector": "data.seeding_leeching_data.leeching_count"
+        },
+        "signed_in": {
+          "selector": "code",
+          "filters": [
+            {
+              "name": "constant",
+              "args": "true"
+            }
+          ]
         }
       }
     },
     "user_details": {
       "parser": "JsonPath",
       "method": "GET",
-      "path": "/api/me",
+      "path": "/api/user/{userId}",
       "disabled_extends": {
         "headers": true,
         "list": true
       },
       "fields": {
+        "id": {
+          "selector": "data.username"
+        },
+        "name": {
+          "selector": "data.username"
+        },
         "level": {
-          "selector": "data.stats.level"
+          "selector": "data.level"
         },
         "level_id": {
-          "selector": "data.stats.level"
+          "selector": "data.level"
         },
         "join_at": {
-          "selector": "data.created_at"
+          "selector": "data.created_at",
+          "filters": [
+            {
+              "name": "timestamp",
+              "args": [
+                "2006-01-02T15:04:05-07:00",
+                "2006-01-02T15:04:05.999999-07:00"
+              ]
+            }
+          ]
+        },
+        "join_date": {
+          "selector": "data.created_at",
+          "filters": [
+            {
+              "name": "timestamp",
+              "args": [
+                "2006-01-02T15:04:05-07:00",
+                "2006-01-02T15:04:05.999999-07:00"
+              ]
+            }
+          ]
         },
         "last_accessed": {
-          "selector": "data.last_active_at"
+          "selector": "data.last_active_at",
+          "filters": [
+            {
+              "name": "timestamp",
+              "args": [
+                "2006-01-02T15:04:05-07:00",
+                "2006-01-02T15:04:05.999999-07:00"
+              ]
+            }
+          ]
         },
-        "seeding_count": {
-          "selector": "data.seeding_leeching_data.seeding_count"
+        "last_seen": {
+          "selector": "data.last_active_at",
+          "filters": [
+            {
+              "name": "timestamp",
+              "args": [
+                "2006-01-02T15:04:05-07:00",
+                "2006-01-02T15:04:05.999999-07:00"
+              ]
+            }
+          ]
         },
         "uploaded_total": {
-          "selector": "data.stats.uploaded",
+          "selector": "data.uploaded"
+        },
+        "downloaded_total": {
+          "selector": "data.downloaded"
+        },
+        "ratio": {
+          "selector": "data.ratio"
+        },
+        "bonus": {
+          "selector": "data.karma"
+        },
+        "seeding_count": {
+          "selector": "data.seeding_count"
+        },
+        "seeding_size": {
+          "selector": "data.seeding_detail.volume",
           "filters": [
+            {
+              "name": "append_right",
+              "args": " TiB"
+            },
             {
               "name": "byte_size"
             }
           ]
-        },
-        "ratio": {
-          "selector": "data.stats.ratio"
         }
       }
     },
@@ -251,54 +320,6 @@
       "fields": {
         "count": {
           "selector": "data.seeding_leeching_data.seeding_count"
-        }
-      }
-    },
-    "messages": {
-      "parser": "JsonPath",
-      "method": "GET",
-      "path": "/api/messages",
-      "params": {
-        "page": ["0"],
-        "page_size": ["20"]
-      },
-      "list": {
-        "selector": "data.messages"
-      },
-      "fields": {
-        "title": {
-          "selector": "title"
-        },
-        "id": {
-          "selector": "id"
-        },
-        "date": {
-          "selector": "created_at"
-        },
-        "content": {
-          "selector": "content"
-        }
-      }
-    },
-    "notice": {
-      "parser": "JsonPath",
-      "method": "GET",
-      "path": "/api/announcements/latest",
-      "params": {
-        "limit": ["3"]
-      },
-      "list": {
-        "selector": "data"
-      },
-      "fields": {
-        "title": {
-          "selector": "title"
-        },
-        "content": {
-          "selector": "body"
-        },
-        "create_time": {
-          "selector": "created_at"
         }
       }
     },
@@ -351,18 +372,125 @@
       "parser": "JsonPath",
       "method": "POST",
       "path": "/api/points/attendance",
-      "params": {
-        "mode": ["fixed"]
+      "body": {
+        "mode": "fixed"
       },
+      "success_status_codes": [
+        200,
+        400
+      ],
       "fields": {
         "signed_in": {
-          "selector": "code",
+          "selector": "message",
           "filters": [
             {
-              "name": "eq",
-              "args": "0"
+              "name": "constant",
+              "args": "true"
             }
           ]
+        },
+        "message": {
+          "selector": "message"
+        },
+        "code": {
+          "selector": "code"
+        }
+      }
+    },
+    "notice": {
+      "parser": "JsonPath",
+      "method": "GET",
+      "path": "/api/announcements/latest",
+      "params": {
+        "limit": [
+          "3"
+        ]
+      },
+      "list": {
+        "selector": "data"
+      },
+      "fields": {
+        "id": {
+          "selector": "id"
+        },
+        "title": {
+          "selector": "title"
+        },
+        "content": {
+          "selector": "content"
+        },
+        "date": {
+          "selector": "created_at"
+        },
+        "sender": {
+          "selector": "author.username"
+        },
+        "link": {
+          "selector": "id",
+          "filters": [
+            {
+              "name": "append_left",
+              "args": "/announcements/"
+            }
+          ]
+        }
+      }
+    },
+    "messages": {
+      "parser": "JsonPath",
+      "method": "GET",
+      "path": "/api/messages",
+      "params": {
+        "page": [
+          "{page}"
+        ],
+        "page_size": [
+          "20"
+        ]
+      },
+      "list": {
+        "selector": "data.messages"
+      },
+      "fields": {
+        "id": {
+          "selector": "id"
+        },
+        "title": {
+          "selector": "title"
+        },
+        "content": {
+          "selector": "content"
+        },
+        "sender": {
+          "selector": "sender.username"
+        },
+        "date": {
+          "selector": "created_at"
+        },
+        "link": {
+          "selector": "id",
+          "filters": [
+            {
+              "name": "append_left",
+              "args": "/messages/"
+            }
+          ]
+        }
+      }
+    },
+    "seeding_statistics": {
+      "parser": "JsonPath",
+      "method": "GET",
+      "path": "/api/me",
+      "fields": {
+        "seeding_count": {
+          "selector": "data.seeding_leeching_data.seeding_count"
+        },
+        "seeding_size": {
+          "selector": "data.seeding_leeching_data.seeding_size"
+        },
+        "leeching_count": {
+          "selector": "data.seeding_leeching_data.leeching_count"
         }
       }
     }

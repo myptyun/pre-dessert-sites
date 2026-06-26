@@ -223,6 +223,60 @@
           ]
         }
       }
+    },
+    "user_details": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/userdetails.php?id={userId}",
+      "fields": {
+        "level": {
+          "selector": "//*[contains(@class,\"ud-class\")]//b/text() | //*[@data-uploader-badge]/@data-uploader-badge",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "join_at": {
+          "selector": "//*[contains(@class,\"ud-hero__meta\")]//span[contains(.,\"加入日期\")]/span/@title | //*[contains(@class,\"ud-hero__meta\")]//span[contains(.,\"加入日期\")]/text()",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        },
+        "last_accessed": {
+          "selector": "//*[contains(@class,\"ud-hero__meta\")]//span[contains(.,\"最近动向\")]/span/@title | //*[contains(@class,\"ud-hero__meta\")]//span[contains(.,\"最近动向\")]/text()",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        },
+        "level_icon": {
+          "selector": "//*[contains(@class,\"ud-class\")]//b/text() | //*[@data-uploader-badge]/@data-uploader-badge",
+          "filters": [
+            {
+              "name": "constant",
+              "args": "pic/elite.gif"
+            }
+          ]
+        }
+      }
     }
   }
 }

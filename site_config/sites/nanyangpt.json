@@ -77,20 +77,20 @@
       },
       "fields": {
         "count": {
-          "selector": "//div[contains(., '条记录') and contains(., '总大小')]",
+          "selector": "//body",
           "filters": [
             {
               "name": "re_search",
-              "args": ["(\\d+)", 1]
+              "args": ["<b>(\\d+)</b>\\s*条记录", 1]
             }
           ]
         },
         "size": {
-          "selector": "//div[contains(., '条记录') and contains(., '总大小')]",
+          "selector": "//body",
           "filters": [
             {
               "name": "re_search",
-              "args": ["总大小：(.*)", 1]
+              "args": ["条记录(?:\\s|&nbsp;| )*-(?:\\s|&nbsp;| )*([0-9.]+(?:\\s|&nbsp;| )*(?:[KMGTPE]i?B|[KMGTPE]B))", 1]
             },
             {
               "name": "strip"

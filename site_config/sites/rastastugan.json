@@ -16,18 +16,68 @@
     "has_cover": true
   },
   "category": {
-    "movie": [{ "id": 1, "cat": "Movies", "desc": "Movie" }],
-    "tv": [{ "id": 2, "cat": "TV", "desc": "TV" }],
-    "music": [{ "id": 3, "cat": "Music", "desc": "Music" }],
+    "movie": [
+      {
+        "id": 1,
+        "cat": "Movies",
+        "desc": "Movie"
+      }
+    ],
+    "tv": [
+      {
+        "id": 2,
+        "cat": "TV",
+        "desc": "TV"
+      }
+    ],
+    "music": [
+      {
+        "id": 3,
+        "cat": "Music",
+        "desc": "Music"
+      }
+    ],
     "other": [
-      { "id": 4, "cat": "Other", "desc": "App" },
-      { "id": 5, "cat": "Other", "desc": "Game" },
-      { "id": 7, "cat": "Other", "desc": "Audiobook" },
-      { "id": 8, "cat": "Other", "desc": "Book" },
-      { "id": 9, "cat": "Other", "desc": "Podcast" },
-      { "id": 10, "cat": "Other", "desc": "Sport" },
-      { "id": 11, "cat": "Other", "desc": "3D Printable" },
-      { "id": 6, "cat": "Other", "desc": "XXX" }
+      {
+        "id": 4,
+        "cat": "Other",
+        "desc": "App"
+      },
+      {
+        "id": 5,
+        "cat": "Other",
+        "desc": "Game"
+      },
+      {
+        "id": 7,
+        "cat": "Other",
+        "desc": "Audiobook"
+      },
+      {
+        "id": 8,
+        "cat": "Other",
+        "desc": "Book"
+      },
+      {
+        "id": 9,
+        "cat": "Other",
+        "desc": "Podcast"
+      },
+      {
+        "id": 10,
+        "cat": "Other",
+        "desc": "Sport"
+      },
+      {
+        "id": 11,
+        "cat": "Other",
+        "desc": "3D Printable"
+      },
+      {
+        "id": 6,
+        "cat": "Other",
+        "desc": "XXX"
+      }
     ]
   },
   "requests": {
@@ -44,35 +94,92 @@
         "is_login": {
           "selector": "//form[contains(@action, '/logout')]//button",
           "filters": [
-            { "name": "re_search", "args": ["(注销|Logout)", 0] },
-            { "name": "replace", "args": ["注销", "true"] },
-            { "name": "replace", "args": ["Logout", "true"] }
+            {
+              "name": "re_search",
+              "args": [
+                "(注销|Logout)",
+                0
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "注销",
+                "true"
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "Logout",
+                "true"
+              ]
+            }
           ]
         },
         "id": {
-          "selector": "//a[contains(@class, 'top-nav__username')]/@href",
-          "filters": [{ "name": "re_search", "args": ["/users/([^/]+)", 1] }]
+          "selector": "//a[contains(@href,'/users/') and (contains(@href,'/conversations') or contains(@class,'username') or contains(@class,'user'))]/@href | //meta[@name='user-login']/@content | //a[contains(@href,'/users/')]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "/users/([^/?#]+)/",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
         },
         "name": {
           "selector": "//a[contains(@class, 'top-nav__username')]//span[contains(@class, 'text-bold')]/text()"
         },
         "uploaded": {
           "selector": "//li[contains(@class, 'ratio-bar__uploaded')]/a/text()[not(parent::time)]",
-          "filters": [{ "name": "byte_size" }]
+          "filters": [
+            {
+              "name": "byte_size"
+            }
+          ]
         },
         "downloaded": {
           "selector": "//li[contains(@class, 'ratio-bar__downloaded')]/a/text()[not(parent::time)]",
-          "filters": [{ "name": "byte_size" }]
+          "filters": [
+            {
+              "name": "byte_size"
+            }
+          ]
         },
         "ratio": {
           "selector": "//li[contains(@class, 'ratio-bar__ratio')]/a/text()",
-          "filters": [{ "name": "replace", "args": [",", ""] }]
+          "filters": [
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            }
+          ]
         },
         "bonus": {
           "selector": "//li[contains(@class, 'ratio-bar__points')]/a/text()",
           "filters": [
-            { "name": "replace", "args": [" ", ""] },
-            { "name": "replace", "args": [",", ""] }
+            {
+              "name": "replace",
+              "args": [
+                " ",
+                ""
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            }
           ]
         }
       }
@@ -84,15 +191,27 @@
       "fields": {
         "level": {
           "selector": "//span[contains(@class, 'user-tag')]/a/@title",
-          "filters": [{ "name": "strip" }]
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "join_at": {
           "selector": "//time[contains(@class, 'profile__registration')]/@datetime",
-          "filters": [{ "name": "timestamp" }]
+          "filters": [
+            {
+              "name": "timestamp"
+            }
+          ]
         },
         "last_accessed": {
           "selector": "//dt[contains(text(),'上次登录时间') or contains(text(),'Last Activity')]/following-sibling::dd[1]/time/@datetime",
-          "filters": [{ "name": "timestamp" }]
+          "filters": [
+            {
+              "name": "timestamp"
+            }
+          ]
         }
       }
     },
@@ -100,17 +219,31 @@
       "parser": "XPath",
       "method": "GET",
       "path": "/users/{userId}",
-      "disabled_extends": { "list": true },
+      "disabled_extends": {
+        "list": true
+      },
       "fields": {
         "size": {
           "selector": "(//dt[abbr[contains(@title, '做种体积')]]/following-sibling::dd[1]/text())[1]",
-          "filters": [{ "name": "byte_size" }]
+          "filters": [
+            {
+              "name": "byte_size"
+            }
+          ]
         },
         "count": {
           "selector": "/html/body/header/nav[1]/div[2]/ul[1]/li[3]/a/text()",
           "filters": [
-            { "name": "replace", "args": [",", ""] },
-            { "name": "strip" }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         }
       }
@@ -119,9 +252,15 @@
       "method": "GET",
       "path": "torrents",
       "params": {
-        "search": ["{keyword}"],
-        "perPage": ["100"],
-        "view": ["list"]
+        "search": [
+          "{keyword}"
+        ],
+        "perPage": [
+          "100"
+        ],
+        "view": [
+          "list"
+        ]
       },
       "list": {
         "selector": "table.data-table > tbody > tr"
@@ -130,30 +269,123 @@
         "id": {
           "selector": "a.torrent-search--list__name",
           "attribute": "href",
-          "filters": [{ "name": "re_search", "args": ["\\d+", 0] }]
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "\\d+",
+                0
+              ]
+            }
+          ]
         },
-        "title": { "selector": "a.torrent-search--list__name" },
-        "details": { "selector": "a.torrent-search--list__name", "attribute": "href" },
-        "download": { "selector": "a[href*='/torrents/download/']", "attribute": "href" },
+        "title": {
+          "selector": "a.torrent-search--list__name"
+        },
+        "details": {
+          "selector": "a.torrent-search--list__name",
+          "attribute": "href"
+        },
+        "download": {
+          "selector": "a[href*='/torrents/download/']",
+          "attribute": "href"
+        },
         "date_added": {
           "selector": "td.torrent-search--list__age > time",
           "attribute": "datetime",
-          "filters": [{ "name": "timestamp" }]
+          "filters": [
+            {
+              "name": "timestamp"
+            }
+          ]
         },
         "size": {
           "selector": "td.torrent-search--list__size",
-          "filters": [{ "name": "byte_size" }]
+          "filters": [
+            {
+              "name": "byte_size"
+            }
+          ]
         },
-        "seeders": { "selector": "td.torrent-search--list__seeders > a" },
-        "leechers": { "selector": "td.torrent-search--list__leechers > a" },
-        "grabs": { "selector": "td.torrent-search--list__completed > a" },
+        "seeders": {
+          "selector": "td.torrent-search--list__seeders > a"
+        },
+        "leechers": {
+          "selector": "td.torrent-search--list__leechers > a"
+        },
+        "grabs": {
+          "selector": "td.torrent-search--list__completed > a"
+        },
         "downloadvolumefactor": {
-          "case": { "i.torrent-icons__freeleech": 0, "*": 1 }
+          "case": {
+            "i.torrent-icons__freeleech": 0,
+            "*": 1
+          }
         },
         "uploadvolumefactor": {
-          "case": { "i.torrent-icons__double-upload": 2, "*": 1 }
+          "case": {
+            "i.torrent-icons__double-upload": 2,
+            "*": 1
+          }
         }
       }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "list": {
+        "selector": "//table[contains(@class, 'data-table')]/tbody/tr[.//a[contains(@href,'/conversations/')]]"
+      },
+      "fields": {
+        "title": {
+          "selector": "./td[2]/a",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": "./td[2]/a/@href"
+        },
+        "id": {
+          "selector": "./td[2]/a/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "/conversations/(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "sender": {
+          "selector": "./td[1]//span[contains(@class, 'user-tag')]/a | ./td[1]//a[contains(@href,'/users/')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": "./td[3]//time/@title | ./td[3]//time/@datetime | ./td[3]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "unread": {
+          "selector": "./td[contains(@class,'unread') or .//i[contains(@class,'text-red') or contains(@class,'fa-envelope') and not(contains(@class,'open'))]]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        }
+      },
+      "path": "/users/{userId}/conversations"
     }
   }
 }

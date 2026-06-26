@@ -17,22 +17,62 @@
   },
   "category": {
     "music": [
-      { "id": 1, "cat": "Album", "desc": "专辑" },
-      { "id": 2, "cat": "Single", "desc": "单曲" }
+      {
+        "id": 1,
+        "cat": "Album",
+        "desc": "专辑"
+      },
+      {
+        "id": 2,
+        "cat": "Single",
+        "desc": "单曲"
+      }
     ],
     "video": [
-      { "id": 3, "cat": "PV", "desc": "PV/MV" },
-      { "id": 4, "cat": "DVD", "desc": "DVD/ISO" },
-      { "id": 8, "cat": "Fansubs", "desc": "字幕组" }
+      {
+        "id": 3,
+        "cat": "PV",
+        "desc": "PV/MV"
+      },
+      {
+        "id": 4,
+        "cat": "DVD",
+        "desc": "DVD/ISO"
+      },
+      {
+        "id": 8,
+        "cat": "Fansubs",
+        "desc": "字幕组"
+      }
     ],
     "tv": [
-      { "id": 5, "cat": "TV-Music", "desc": "音乐节目" },
-      { "id": 6, "cat": "TV-Variety", "desc": "综艺节目" },
-      { "id": 7, "cat": "TV-Drama", "desc": "日剧" }
+      {
+        "id": 5,
+        "cat": "TV-Music",
+        "desc": "音乐节目"
+      },
+      {
+        "id": 6,
+        "cat": "TV-Variety",
+        "desc": "综艺节目"
+      },
+      {
+        "id": 7,
+        "cat": "TV-Drama",
+        "desc": "日剧"
+      }
     ],
     "other": [
-      { "id": 9, "cat": "Pictures", "desc": "图片" },
-      { "id": 10, "cat": "Misc", "desc": "杂项" }
+      {
+        "id": 9,
+        "cat": "Pictures",
+        "desc": "图片"
+      },
+      {
+        "id": 10,
+        "cat": "Misc",
+        "desc": "杂项"
+      }
     ]
   },
   "requests": {
@@ -47,7 +87,26 @@
       "path": "/",
       "fields": {
         "content": {
-          "selector": "//div[@id='news']//div[@class='pad']"
+          "selector": "//div[@id='content']//div[contains(@class,'box')][.//div[contains(@class,'head') and contains(., 'posted')]]",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                "\t",
+                " "
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "\n\n",
+                "\n"
+              ]
+            }
+          ]
         }
       }
     },
@@ -60,14 +119,32 @@
           "selector": "//a[contains(@href,'logout.php')]",
           "attribute": "href",
           "filters": [
-            { "name": "re_search", "args": ["logout", 0] },
-            { "name": "replace", "args": ["logout", "true"] }
+            {
+              "name": "re_search",
+              "args": [
+                "logout",
+                0
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "logout",
+                "true"
+              ]
+            }
           ]
         },
         "id": {
           "selector": "//div[@id='userinfo']//a[@class='username']/@href",
           "filters": [
-            { "name": "re_search", "args": ["id=(\\d+)", 1] }
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
           ]
         },
         "name": {
@@ -76,26 +153,44 @@
         "uploaded": {
           "selector": "//ul[@id='userinfo_stats']//li[contains(.,'Up:')]/span[@class='stat']/text()",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "downloaded": {
           "selector": "//ul[@id='userinfo_stats']//li[contains(.,'Down:')]/span[@class='stat']/text()",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
           ]
         },
         "ratio": {
           "selector": "//ul[@id='userinfo_stats']//li[contains(.,'Ratio:')]/span[@class='stat']/span/text()",
           "filters": [
-            { "name": "replace", "args": [",", ""] }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            }
           ]
         },
         "bonus": {
           "selector": "//ul[@id='userinfo_stats']//li[contains(.,'Bonus:')]//span[@class='stat']/text()",
           "filters": [
-            { "name": "replace", "args": [",", ""] },
-            { "name": "strip" }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         }
       }
@@ -108,22 +203,44 @@
         "level": {
           "selector": "//li[contains(.,'Class:')]/text()",
           "filters": [
-            { "name": "replace", "args": ["Class:", ""] },
-            { "name": "strip" }
+            {
+              "name": "replace",
+              "args": [
+                "Class:",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         },
         "join_at": {
           "selector": "//ul[@class='stats nobullet']/li[contains(.,'Joined')]/span/@title",
           "filters": [
-            { "name": "strip" },
-            { "name": "timestamp", "args": ["Jan 02 2006, 15:04"] }
+            {
+              "name": "strip"
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "Jan 02 2006, 15:04"
+              ]
+            }
           ]
         },
         "last_accessed": {
           "selector": "//ul[@class='stats nobullet']/li[contains(.,'Last Seen')]/span/@title",
           "filters": [
-            { "name": "strip" },
-            { "name": "timestamp", "args": ["Jan 02 2006, 15:04"] }
+            {
+              "name": "strip"
+            },
+            {
+              "name": "timestamp",
+              "args": [
+                "Jan 02 2006, 15:04"
+              ]
+            }
           ]
         }
       }
@@ -136,7 +253,13 @@
         "count": {
           "selector": "//div[contains(text(),'Community')]/following-sibling::ul/li[6]/text()[1]",
           "filters": [
-            { "name": "re_search", "args": ["(\\d+)", 1] }
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
           ]
         }
       }
@@ -146,119 +269,405 @@
       "method": "GET",
       "path": "/inbox.php",
       "list": {
-        "selector": "//table[@id='messageformtable']/tbody/tr"
+        "selector": "//table[contains(@id,'message') or contains(@class,'message') or .//td[contains(@class,'subject')]]//tr[td and .//a[contains(@href,'inbox.php') or contains(@href,'message')]]"
       },
       "fields": {
         "id": {
-          "selector": "./td[2]/a/@href",
+          "selector": ".//a[contains(@href,'id=')]/@href",
           "filters": [
-            { "name": "re_search", "args": ["id=(\\d+)", 1] }
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
           ]
         },
         "title": {
-          "selector": "./td[2]/a/text()"
+          "selector": "(.//td[contains(@class,'subject')]//a | ./td[2]//a | .//a[contains(@href,'inbox.php')])[last()]/text()",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "link": {
-          "selector": "./td[2]/a/@href"
+          "selector": "(.//td[contains(@class,'subject')]//a | ./td[2]//a | .//a[contains(@href,'inbox.php')])[last()]/@href",
+          "filters": [
+            {
+              "name": "append_left",
+              "args": "https://jpopsuki.eu/"
+            }
+          ]
         },
         "sender": {
-          "selector": "./td[3]//a/text()"
+          "selector": "(.//td[contains(@class,'sender')]//a/text() | ./td[3]//a/text())[1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         },
         "date": {
-          "selector": "./td[4]/span/@title",
+          "selector": "(.//span[@title]/@title | ./td[contains(@class,'nobr')]/@title | ./td[last()]/span/@title)[1]",
           "filters": [
-            { "name": "timestamp" }
+            {
+              "name": "timestamp"
+            }
           ]
         },
         "unread": {
-          "selector": "./td[1]/img[@alt='Unread']"
+          "selector": ".//*[contains(@class,'unread') or @alt='Unread' or contains(@src,'unread')]"
         }
       }
     },
     "search": {
-      "path": "torrents.php?perPage=100&disablegrouping=1",
+      "path": "/torrents.php",
       "params": {
-        "searchstr": [ "{keyword}" ]
+        "perPage": [
+          "100"
+        ],
+        "disablegrouping": [
+          "1"
+        ],
+        "searchstr": [
+          "{keyword}"
+        ],
+        "page": [
+          "{page}"
+        ]
       },
       "list": {
-        "selector": "table#torrent_table > tbody > tr:has(a[href*='action=download'])"
+        "selector": "table#torrent_table > tbody > tr:has(a[href*='action=download']), table#torrent_table > tr:has(a[href*='action=download'])"
       },
       "fields": {
         "id": {
           "selector": "a[href*='action=download']",
           "attribute": "href",
           "filters": [
-            { "name": "querystring", "args": "id" }
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "torrent_id": {
+          "selector": "a[href*='action=download']",
+          "attribute": "href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "id=(\\d+)",
+                1
+              ]
+            }
           ]
         },
         "category": {
-          "selector": "td:nth-child(2) a",
-          "attribute": "href",
+          "selector": "td:nth-child(1) a",
           "filters": [
-            { "name": "querystring", "args": "filter_cat[1]" }
+            {
+              "name": "strip"
+            }
           ]
         },
         "title": {
-          "selector": "td:nth-child(4) a[href*='torrents.php?id=']:not([href*='#'])",
-          "optional": true
+          "selector": "td:nth-child(3) a[href*='torrents.php?id='][href*='torrentid=']",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "group_title": {
+          "selector": "td:nth-child(3) a[href*='torrents.php?id='][href*='torrentid=']",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "artist": {
+          "selector": "td:nth-child(3) a[href*='artist.php?id=']",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "description": {
+          "selector": "td:nth-child(3)",
+          "remove": "span,a,div,br",
+          "filters": [
+            {
+              "name": "replace",
+              "args": [
+                "\t",
+                " "
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "\n",
+                " "
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "subtitle": {
+          "selector": "td:nth-child(3)",
+          "remove": "span,a,div,br",
+          "filters": [
+            {
+              "name": "replace",
+              "args": [
+                "\t",
+                " "
+              ]
+            },
+            {
+              "name": "replace",
+              "args": [
+                "\n",
+                " "
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
         },
         "details": {
-          "selector": "td:nth-child(4) a[href*='torrents.php?id=']",
-          "attribute": "href"
+          "selector": "td:nth-child(3) a[href*='torrents.php?id='][href*='torrentid=']",
+          "attribute": "href",
+          "filters": [
+            {
+              "name": "append_left",
+              "args": "https://jpopsuki.eu/"
+            }
+          ]
+        },
+        "page_url": {
+          "selector": "td:nth-child(3) a[href*='torrents.php?id='][href*='torrentid=']",
+          "attribute": "href",
+          "filters": [
+            {
+              "name": "append_left",
+              "args": "https://jpopsuki.eu/"
+            }
+          ]
         },
         "download": {
           "selector": "a[href*='action=download']",
-          "attribute": "href"
+          "attribute": "href",
+          "filters": [
+            {
+              "name": "append_left",
+              "args": "https://jpopsuki.eu/"
+            }
+          ]
+        },
+        "enclosure": {
+          "selector": "a[href*='action=download']",
+          "attribute": "href",
+          "filters": [
+            {
+              "name": "append_left",
+              "args": "https://jpopsuki.eu/"
+            }
+          ]
         },
         "poster": {
-          "selector": "td:nth-child(3) img",
-          "attribute": "src"
+          "selector": "td:nth-child(2) img",
+          "attribute": "src",
+          "filters": [
+            {
+              "name": "append_left",
+              "args": "https://jpopsuki.eu/"
+            }
+          ]
+        },
+        "cover": {
+          "selector": "td:nth-child(2) img",
+          "attribute": "src",
+          "filters": [
+            {
+              "name": "append_left",
+              "args": "https://jpopsuki.eu/"
+            }
+          ]
         },
         "date_added": {
-          "selector": "td:nth-child(6)",
+          "selector": "td:nth-child(5)",
           "attribute": "title",
           "filters": [
-            { "name": "timestamp", "args": ["Jan 02 2006, 15:04"] }
+            {
+              "name": "timestamp",
+              "args": [
+                "Jan 02 2006, 15:04"
+              ]
+            }
+          ]
+        },
+        "pubdate": {
+          "selector": "td:nth-child(5)",
+          "attribute": "title",
+          "filters": [
+            {
+              "name": "timestamp",
+              "args": [
+                "Jan 02 2006, 15:04"
+              ]
+            }
           ]
         },
         "size": {
-          "selector": "td:nth-child(7)",
+          "selector": "td:nth-child(6)",
           "filters": [
-            { "name": "byte_size" }
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "files": {
+          "selector": "td:nth-child(4)",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            }
           ]
         },
         "grabs": {
-          "selector": "td:nth-child(8)",
+          "selector": "td:nth-child(7)",
           "filters": [
-            { "name": "replace", "args": [",", ""] }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "completed": {
+          "selector": "td:nth-child(7)",
+          "filters": [
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         },
         "seeders": {
-          "selector": "td:nth-child(9)",
+          "selector": "td:nth-child(8)",
           "filters": [
-            { "name": "replace", "args": [",", ""] }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         },
         "leechers": {
-          "selector": "td:nth-child(10)",
+          "selector": "td:nth-child(9)",
           "filters": [
-            { "name": "replace", "args": [",", ""] }
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "downloaders": {
+          "selector": "td:nth-child(9)",
+          "filters": [
+            {
+              "name": "replace",
+              "args": [
+                ",",
+                ""
+              ]
+            },
+            {
+              "name": "strip"
+            }
           ]
         },
         "downloadvolumefactor": {
           "case": {
-            "strong:contains('Freeleech')": 0,
+            "strong:contains('Freeleech'), img[alt*='Free'], img[title*='Free']": 0,
             "*": 1
           }
         },
         "uploadvolumefactor": {
-          "text": 1
+          "selector": ".",
+          "filters": [
+            {
+              "name": "constant",
+              "args": "1"
+            }
+          ]
         },
         "labels": {
           "selector": "div.tags a",
           "array": true,
-          "optional": true
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "tags": {
+          "selector": "div.tags a",
+          "array": true,
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
         }
+      },
+      "parser": "CssSelector",
+      "method": "GET",
+      "disabled_extends": {
+        "fields": true,
+        "field": true,
+        "list": true
       }
     }
   }

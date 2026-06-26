@@ -98,7 +98,10 @@
           "filters": [
             {
               "name": "replace",
-              "args": ["()", ""]
+              "args": [
+                "()",
+                ""
+              ]
             }
           ]
         }
@@ -196,6 +199,33 @@
         "action": [
           "sign_in"
         ]
+      },
+      "fields": {
+        "signed_in": {
+          "selector": "*",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "regex",
+              "args": "(已连续签到\\d+天|此次签到您获得了\\d+魔力值奖励|请不要重复签到|签到成功|签到已得|簽到已得|今日已签到)"
+            }
+          ]
+        }
+      },
+      "parser": "XPath"
+    },
+    "user_basic_info": {
+      "fields": {
+        "signed_in": {
+          "selector": "*",
+          "selection": "html",
+          "filters": [
+            {
+              "name": "regex",
+              "args": "__MSGO_HDAREA_NEVER_TRUST_HOMEPAGE_SIGNED_IN__"
+            }
+          ]
+        }
       }
     }
   }

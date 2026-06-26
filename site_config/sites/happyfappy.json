@@ -1,7 +1,7 @@
 {
   "id": "happyfappy",
   "name": "HF",
-  "domain": "https://happyfappy.org",
+  "domain": "https://happyfappy.net",
   "encoding": "UTF-8",
   "public": false,
   "schema": "NexusPHP",
@@ -281,63 +281,6 @@
         }
       }
     },
-    "messages": {
-      "parser": "XPath",
-      "method": "GET",
-      "path": "/user/inbox/received",
-      "list": {
-        "selector": "//table//tbody/tr[.//a[contains(@href,'inbox')]] | //div[contains(@class,'box')]//tr[.//a[contains(@href,'inbox') or contains(@href,'conversation')]]"
-      },
-      "fields": {
-        "id": {
-          "selector": ".//a[contains(@href,'inbox') or contains(@href,'conversation')]/@href",
-          "filters": [
-            {
-              "name": "re_search",
-              "args": [
-                "(?:inbox|conversation)[^/]*/(\\d+)|[?&]id=(\\d+)",
-                1
-              ]
-            }
-          ]
-        },
-        "title": {
-          "selector": ".//a[contains(@href,'inbox') or contains(@href,'conversation')]",
-          "filters": [
-            {
-              "name": "strip"
-            }
-          ]
-        },
-        "link": {
-          "selector": ".//a[contains(@href,'inbox') or contains(@href,'conversation')]/@href"
-        },
-        "sender": {
-          "selector": ".//td[1]//a | .//*[contains(@class,'sender')]//a",
-          "filters": [
-            {
-              "name": "strip"
-            }
-          ]
-        },
-        "date": {
-          "selector": ".//td[last()] | .//*[contains(@class,'time')]",
-          "filters": [
-            {
-              "name": "strip"
-            }
-          ]
-        },
-        "unread": {
-          "selector": ".//*[contains(@class,'unread')]",
-          "filters": [
-            {
-              "name": "not_blank"
-            }
-          ]
-        }
-      }
-    },
     "notice": {
       "parser": "XPath",
       "method": "GET",
@@ -434,37 +377,6 @@
                 "^",
                 "/#"
               ]
-            }
-          ]
-        }
-      }
-    },
-    "message_detail": {
-      "parser": "XPath",
-      "method": "GET",
-      "path": "/user/inbox/received/{id}",
-      "fields": {
-        "title": {
-          "selector": "//h1 | //div[contains(@class,'head')]//h2 | //div[contains(@class,'box')]//div[contains(@class,'head')]",
-          "filters": [
-            {
-              "name": "strip"
-            }
-          ]
-        },
-        "date": {
-          "selector": "//*[contains(.,'Date') or contains(.,'Sent')]/following-sibling::*[1] | //span[@class='time']/@title",
-          "filters": [
-            {
-              "name": "strip"
-            }
-          ]
-        },
-        "content": {
-          "selector": "//div[contains(@class,'pad')] | //div[contains(@class,'body')] | //div[contains(@class,'message')]//div[contains(@class,'text')]",
-          "filters": [
-            {
-              "name": "strip"
             }
           ]
         }
@@ -698,6 +610,94 @@
                   ]
                 }
               ]
+            }
+          ]
+        }
+      }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/user/inbox/received",
+      "list": {
+        "selector": "//table//tbody/tr[.//a[contains(@href,'inbox')]] | //div[contains(@class,'box')]//tr[.//a[contains(@href,'inbox') or contains(@href,'conversation')]]"
+      },
+      "fields": {
+        "id": {
+          "selector": ".//a[contains(@href,'inbox') or contains(@href,'conversation')]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(?:inbox|conversation)[^/]*/(\\d+)|[?&]id=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "title": {
+          "selector": ".//a[contains(@href,'inbox') or contains(@href,'conversation')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": ".//a[contains(@href,'inbox') or contains(@href,'conversation')]/@href"
+        },
+        "sender": {
+          "selector": ".//td[1]//a | .//*[contains(@class,'sender')]//a",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": ".//td[last()] | .//*[contains(@class,'time')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "unread": {
+          "selector": ".//*[contains(@class,'unread')]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        }
+      }
+    },
+    "message_detail": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/user/inbox/received/{id}",
+      "fields": {
+        "title": {
+          "selector": "//h1 | //div[contains(@class,'head')]//h2 | //div[contains(@class,'box')]//div[contains(@class,'head')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": "//*[contains(.,'Date') or contains(.,'Sent')]/following-sibling::*[1] | //span[@class='time']/@title",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "content": {
+          "selector": "//div[contains(@class,'pad')] | //div[contains(@class,'body')] | //div[contains(@class,'message')]//div[contains(@class,'text')]",
+          "filters": [
+            {
+              "name": "strip"
             }
           ]
         }

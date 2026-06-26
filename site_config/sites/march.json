@@ -99,7 +99,10 @@
           "filters": [
             {
               "name": "re_search",
-              "args": ["(\\d+)", 1]
+              "args": [
+                "(\\d+)",
+                1
+              ]
             }
           ]
         },
@@ -108,7 +111,10 @@
           "filters": [
             {
               "name": "re_search",
-              "args": ["总大小：(.*)", 1]
+              "args": [
+                "总大小：(.*)",
+                1
+              ]
             },
             {
               "name": "strip"

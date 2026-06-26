@@ -233,13 +233,13 @@
       },
       "fields": {
         "size": {
-          "selector": "//td[contains(text(),'做种体积')]/following-sibling::td[1]/span/text()",
+          "selector": "//td[contains(normalize-space(.),'做种体积')]/following-sibling::td[1]//span[contains(@class,'badge-user')]/text()",
           "filters": [
             { "name": "byte_size" }
           ]
         },
         "count": {
-          "selector": "//div[contains(@class,'button-holder')]//span[contains(text(),'做种数量')]/a/text()",
+          "selector": "//span[contains(.,'做种数量')]//a/text()",
           "filters": [
             { "name": "replace", "args": [ ",", "" ] },
             { "name": "strip" }
