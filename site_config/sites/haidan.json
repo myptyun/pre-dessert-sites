@@ -129,29 +129,22 @@
         "Referer": "{domain}/userdetails.php?id={userId}"
       },
       "disabled_extends": {
-        "headers": true,
-        "list": true
+        "headers": true
       },
       "fields": {
-        "count": {
-          "selector": "//body",
-          "filters": [
-            {
-              "name": "re_search",
-              "args": [
-                "(\\d+)\\s*条记录",
-                1
-              ]
-            }
-          ]
-        },
         "size": {
-          "selector": "//tr[position()>1]/td[3]",
+          "selector": "/td[3]",
           "filters": [
             {
               "name": "byte_size"
             }
           ]
+        }
+      },
+      "list": {
+        "selector": "//tr[position()>1]",
+        "next_page": {
+          "selector": "//a[contains(.//text(), '下一页') or contains(.//text(), '下一頁')]/@href"
         }
       }
     },
@@ -166,12 +159,11 @@
       ],
       "fields": {
         "signed_in": {
-          "selector": "//body",
-          "selection": "html",
+          "selector": "//input[@id='modalBtn']/@value",
           "filters": [
             {
               "name": "regex",
-              "args": "(已经打卡|已打卡|打卡成功|签到成功|已签到|已经签到|今日已签到|今日已签|请不要重复签到|重复签到|已簽到|簽到成功|signed|already)"
+              "args": "^(已经打卡|已打卡)$"
             }
           ]
         }
@@ -286,12 +278,11 @@
           ]
         },
         "signed_in": {
-          "selector": "//body",
-          "selection": "html",
+          "selector": "//input[@id='modalBtn']/@value",
           "filters": [
             {
               "name": "regex",
-              "args": "(daily_attendance\\s*\\(\\s*['\"]已经打卡['\"]\\s*\\)|已经打卡|已打卡|今日已签到|今日已签|已签到)"
+              "args": "^(已经打卡|已打卡)$"
             }
           ]
         }

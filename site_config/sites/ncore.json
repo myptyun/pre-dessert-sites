@@ -437,6 +437,101 @@
           ]
         }
       }
+    },
+    "messages": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/inbox.php",
+      "chrome": true,
+      "list": {
+        "selector": "//form[@name='delform']//div[contains(@class,'box_pm') or contains(@class,'pm_lista') or contains(@class,'pm_list') or contains(@class,'pm_sor') or contains(@class,'lista')][.//a[contains(@href,'inbox.php')]] | //form[@name='delform']//tr[.//a[contains(@href,'inbox.php')]]"
+      },
+      "fields": {
+        "id": {
+          "selector": ".//a[contains(@href,'inbox.php')][1]/@href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "[?&](?:id|msgid|pmid)=(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "title": {
+          "selector": ".//a[contains(@href,'inbox.php')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "link": {
+          "selector": ".//a[contains(@href,'inbox.php')][1]/@href"
+        },
+        "sender": {
+          "selector": ".//a[contains(@href,'profile.php')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "date": {
+          "selector": ".//*[contains(text(), '-') and (contains(text(), ':') or contains(text(), '.'))][last()] | .//*[@title][contains(@title, '-')][last()]/@title",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "content": {
+          "selector": ".//*[contains(@class,'pm_szoveg') or contains(@class,'pm_text') or contains(@class,'message') or contains(@class,'uzenet')][1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "unread": {
+          "selector": ".//*[contains(@class,'unread') or contains(@class,'olvasatlan') or contains(@class,'new') or contains(@class,'bold')] | .//img[contains(@src,'unread') or contains(@title,'olvasatlan') or contains(@alt,'olvasatlan')]",
+          "filters": [
+            {
+              "name": "not_blank"
+            }
+          ]
+        }
+      }
+    },
+    "message_detail": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/inbox.php",
+      "params": {
+        "id": [
+          "{id}"
+        ]
+      },
+      "chrome": true,
+      "fields": {
+        "title": {
+          "selector": "//div[@class='pm_cim'] | //div[contains(@class,'pm') and contains(@class,'cim')] | //h1",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "content": {
+          "selector": "//div[contains(@class,'pm_szoveg')] | //div[contains(@class,'pm_text')] | //div[contains(@class,'message')] | //div[contains(@class,'uzenet')] | //div[contains(@class,'box_pm_right')]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        }
+      }
     }
   }
 }
