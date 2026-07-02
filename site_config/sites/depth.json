@@ -1,0 +1,402 @@
+{
+  "id": "depth",
+  "name": "Depth Studio",
+  "domain": "https://dstudio.me",
+  "additional_domain": [],
+  "public": false,
+  "schema": "NexusPHP",
+  "required": {
+    "cookie": true,
+    "sign_in": true
+  },
+  "meta": {
+    "has_free": true,
+    "has_2x_free": true,
+    "has_cover": true,
+    "shoutbox": true
+  },
+  "category": {
+    "movie": [
+      {
+        "id": 401,
+        "cat": "Movies",
+        "desc": "电影/Movies"
+      }
+    ],
+    "tv": [
+      {
+        "id": 402,
+        "cat": "TV",
+        "desc": "TV Series/电视剧"
+      },
+      {
+        "id": 403,
+        "cat": "TV",
+        "desc": "TV Shows/综艺"
+      },
+      {
+        "id": 404,
+        "cat": "TV/Documentary",
+        "desc": "Documentaries/纪录片"
+      },
+      {
+        "id": 405,
+        "cat": "TV/Anime",
+        "desc": "Animes/动漫"
+      },
+      {
+        "id": 406,
+        "cat": "TV",
+        "desc": "Music Videos/演唱会"
+      },
+      {
+        "id": 407,
+        "cat": "TV",
+        "desc": "Sports/体育节目"
+      },
+      {
+        "id": 408,
+        "cat": "TV",
+        "desc": "Music/音乐"
+      },
+      {
+        "id": 409,
+        "cat": "TV",
+        "desc": "Other/其他"
+      }
+    ]
+  },
+  "requests": {
+    "search": {
+      "fields": {
+        "labels": {
+          "selector": "td.embedded > span[title]",
+          "array": true
+        },
+        "description": {
+          "selector": "td.embedded",
+          "remove": "span,a,img,font,b,br",
+          "contents": -1
+        },
+        "hr_days": {
+          "filters": [
+            {
+              "name": "constant",
+              "args": "1"
+            }
+          ]
+        }
+      }
+    },
+    "seeding_statistics": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/getusertorrentlistajax.php?userid={userId}&type=seeding",
+      "headers": {
+        "Referer": "{domain}/userdetails.php?id={userId}"
+      },
+      "disabled_extends": {
+        "headers": true,
+        "list": true
+      },
+      "fields": {
+        "count": {
+          "selector": "//div[contains(., '条记录') and contains(., '总大小')]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d+)",
+                1
+              ]
+            }
+          ]
+        },
+        "size": {
+          "selector": "//div[contains(., '条记录') and contains(., '总大小')]",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "总大小：(.*)",
+                1
+              ]
+            },
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        }
+      }
+    },
+    "my_bonus": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/mybonus.php",
+      "fields": {
+        "bonus_hour": {
+          "any": [
+            {
+              "selector": "//td[contains(.,'基本奖励')]/../td[last()]/text()"
+            },
+            {
+              "selector": "//h1[contains(.,'每小时') or contains(.,'每小時')]/following::table[1]//tr[2]/td[last()]/text()"
+            },
+            {
+              "selector": "//h1[contains(.,'每小时') or contains(.,'每小時')]/following::table[1]//tr[last()]/td[last()]/text()"
+            },
+            {
+              "selector": "//tr[2]/td[8]/text()"
+            }
+          ],
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "re_search",
+              "args": [
+                "([\\d,.]+)",
+                1
+              ]
+            }
+          ]
+        },
+        "bonus": {
+          "any": [
+            {
+              "selector": "//*[contains(concat(' ',normalize-space(@class),' '),' color_bonus ')]/following-sibling::*[1]/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d,.]+)",
+                    1
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "//*[contains(concat(' ',normalize-space(@class),' '),' color_bonus ')]/following-sibling::text()[1]",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d,.]+)",
+                    1
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "//a[contains(@href,'mybonus.php')]/following-sibling::text()[1]",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d,.]+)",
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "user_basic_info": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "",
+      "fields": {
+        "uploaded": {
+          "selector": "//*[contains(concat(' ',normalize-space(@class),' '),' color_uploaded ')]/following-sibling::*[1]/text() | //*[contains(concat(' ',normalize-space(@class),' '),' color_uploaded ')]/following-sibling::text()[1] | //span[contains(concat(' ',normalize-space(@class),' '),' color_uploaded ')]/following-sibling::span[1]/text()",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "downloaded": {
+          "selector": "//*[contains(concat(' ',normalize-space(@class),' '),' color_downloaded ')]/following-sibling::*[1]/text() | //*[contains(concat(' ',normalize-space(@class),' '),' color_downloaded ')]/following-sibling::text()[1] | //span[contains(concat(' ',normalize-space(@class),' '),' color_downloaded ')]/following-sibling::span[1]/text()",
+          "filters": [
+            {
+              "name": "strip"
+            },
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "ratio": {
+          "selector": "//*[contains(concat(' ',normalize-space(@class),' '),' color_ratio ')][1]/following-sibling::*[1]/text() | //*[contains(concat(' ',normalize-space(@class),' '),' color_ratio ')][1]/following-sibling::text()[1]",
+          "filters": [
+            {
+              "name": "strip"
+            }
+          ]
+        },
+        "bonus": {
+          "any": [
+            {
+              "selector": "//*[contains(concat(' ',normalize-space(@class),' '),' color_bonus ')]/following-sibling::*[1]/text()",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d,.]+)",
+                    1
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "//*[contains(concat(' ',normalize-space(@class),' '),' color_bonus ')]/following-sibling::text()[1]",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d,.]+)",
+                    1
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "//a[contains(@href,'mybonus.php')]/following-sibling::text()[1]",
+              "filters": [
+                {
+                  "name": "strip"
+                },
+                {
+                  "name": "re_search",
+                  "args": [
+                    "([\\d,.]+)",
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "user_details": {
+      "parser": "XPath",
+      "method": "GET",
+      "path": "/userdetails.php?id={userId}",
+      "fields": {
+        "level": {
+          "any": [
+            {
+              "selector": "//tr/td[contains(text(), '等級') or contains(text(), '等级')]/following-sibling::td[1]/img[1]/@title"
+            },
+            {
+              "selector": "//tr/td[contains(text(), '等級') or contains(text(), '等级')]/following-sibling::td[1 and not(img)]|//tr/td[contains(text(), '等級') or contains(text(), '等级')]/following-sibling::td[1 and img[not(@title)]]"
+            },
+            {
+              "selector": "//tr/td[contains(text(), '等級') or contains(text(), '等级')]/following-sibling::td[1]"
+            },
+            {
+              "selector": "//a[contains(@href, 'userdetails')]/text()",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "\\[(.*)]",
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "level_icon": {
+          "selector": "//tr/td[contains(text(), '等級') or contains(text(), '等级')]/following-sibling::td[1]/img[1]/@src"
+        },
+        "join_at": {
+          "trim_chars": true,
+          "any": [
+            {
+              "selector": "//tr/td[contains(text(), '加入日期') or contains(text(), '注册日期')]/following-sibling::td[1]//@title"
+            },
+            {
+              "selector": "//tr/td[contains(text(), '加入日期') or contains(text(), '注册日期')]/following-sibling::td[1]//text()"
+            },
+            {
+              "selector": "//tr/td[contains(text(), '加入日期') or contains(text(), '注册日期')]/following-sibling::td[1]/text()"
+            },
+            {
+              "selector": "//div/b[contains(text(), '加入日期') or contains(text(), '注册日期')]/../text()"
+            }
+          ],
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        },
+        "last_accessed": {
+          "trim_chars": true,
+          "any": [
+            {
+              "selector": "//tr/td[contains(text(), '最近访问') or contains(text(), '最近动向') or contains(text(), '上次访问') or contains(text(), '最近動向')]/following-sibling::td[1]//@title"
+            },
+            {
+              "selector": "//tr/td[contains(text(), '最近访问') or contains(text(), '最近动向') or contains(text(), '上次访问') or contains(text(), '最近動向')]/following-sibling::td[1]//text()"
+            },
+            {
+              "selector": "//tr/td[contains(text(), '最近访问') or contains(text(), '最近动向') or contains(text(), '上次访问') or contains(text(), '最近動向')]/following-sibling::td[1]/text()"
+            },
+            {
+              "selector": "//div/b[contains(text(), '最近访问') or contains(text(), '最近动向') or contains(text(), '上次访问') or contains(text(), '最近動向')]/../text()"
+            }
+          ],
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})",
+                1
+              ]
+            },
+            {
+              "name": "timestamp"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "my_hr": {
+    "path": "/myhr.php?status=1"
+  }
+}
