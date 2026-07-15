@@ -91,8 +91,134 @@
   "requests": {
     "search": {
       "fields": {
+        "id": {
+          "selector": "a[href*='details.php?id=']",
+          "attribute": "href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "\\d+",
+                0
+              ]
+            }
+          ]
+        },
+        "category": {
+          "selector": "a[href*='?cat=']",
+          "attribute": "href",
+          "filters": [
+            {
+              "name": "re_search",
+              "args": [
+                "cat=(.*)",
+                1
+              ]
+            }
+          ]
+        },
+        "cover": {
+          "selector": "td:nth-child(2) img.torrent-poster-thumb",
+          "attribute": "data-src"
+        },
+        "title": {
+          "any": [
+            {
+              "selector": "td:nth-child(3) a[title][href*='details.php?id=']",
+              "attribute": "title"
+            },
+            {
+              "selector": "td:nth-child(3) a[href*='details.php?id=']"
+            }
+          ]
+        },
+        "details": {
+          "selector": "td:nth-child(3) a[href*='details.php?id=']",
+          "attribute": "href"
+        },
+        "download": {
+          "selector": "td:nth-child(3) a[href*='download.php?id=']",
+          "attribute": "href"
+        },
+        "size": {
+          "selector": "td:nth-child(6):not(.embedded)",
+          "filters": [
+            {
+              "name": "byte_size"
+            }
+          ]
+        },
+        "grabs": {
+          "selector": "td:nth-child(9):not(.embedded)"
+        },
+        "seeders": {
+          "selector": "td:nth-child(7):not(.embedded)"
+        },
+        "leechers": {
+          "selector": "td:nth-child(8):not(.embedded)"
+        },
+        "downloadvolumefactor": {
+          "any": [
+            {
+              "selector": "img.pro_free,img.pro_free2up",
+              "attribute": "class",
+              "filters": [
+                {
+                  "name": "not_blank",
+                  "args": [
+                    0,
+                    ""
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "img.pro_50pctdown,img.pro_50pctdown2up",
+              "attribute": "class",
+              "filters": [
+                {
+                  "name": "not_blank",
+                  "args": [
+                    0.5,
+                    ""
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "img.pro_30pctdown",
+              "attribute": "class",
+              "filters": [
+                {
+                  "name": "not_blank",
+                  "args": [
+                    0.3,
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "uploadvolumefactor": {
+          "any": [
+            {
+              "selector": "img.pro_50pctdown2up,img.pro_free2up,img.pro_2up",
+              "attribute": "class",
+              "filters": [
+                {
+                  "name": "not_blank",
+                  "args": [
+                    2,
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        },
         "description": {
-          "selector": "td.embedded",
+          "selector": "td:nth-child(3) td.embedded",
           "remove": "span,a,img,font,b,br",
           "contents": -1,
           "filters": [
@@ -101,6 +227,135 @@
               "args": [
                 "()",
                 ""
+              ]
+            }
+          ]
+        },
+        "labels": {
+          "selector": "td:nth-child(2) > span[title='']",
+          "array": true
+        },
+        "imdb_id": {
+          "any": [
+            {
+              "selector": "a[href*='imdb.com/title/tt']",
+              "attribute": "href",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "(tt\\d+)",
+                    1
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "span[data-imdbid]",
+              "attribute": "data-imdbid",
+              "filters": [
+                {
+                  "name": "pad_zero",
+                  "args": 7
+                },
+                {
+                  "name": "append_left",
+                  "args": "tt"
+                }
+              ]
+            },
+            {
+              "selector": "label[data-imdbid]",
+              "attribute": "data-imdbid",
+              "filters": [
+                {
+                  "name": "pad_zero",
+                  "args": 7
+                },
+                {
+                  "name": "append_left",
+                  "args": "tt"
+                }
+              ]
+            },
+            {
+              "selector": "a[href*='search_area=4']",
+              "attribute": "href",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "search=(\\d+)",
+                    1
+                  ]
+                },
+                {
+                  "name": "pad_zero",
+                  "args": 7
+                },
+                {
+                  "name": "append_left",
+                  "args": "tt"
+                }
+              ]
+            }
+          ]
+        },
+        "douban_id": {
+          "any": [
+            {
+              "selector": "a[href*='movie.douban.com/subject/']",
+              "attribute": "href",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "(\\d+)",
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "selector": "span[data-doubanid]",
+              "attribute": "data-doubanid"
+            },
+            {
+              "selector": "label[data-doubanid]",
+              "attribute": "data-doubanid"
+            },
+            {
+              "selector": "a[href*='search_area=5']",
+              "attribute": "href",
+              "filters": [
+                {
+                  "name": "re_search",
+                  "args": [
+                    "search=(\\d+)",
+                    1
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "date_elapsed": {
+          "selector": "td:nth-child(5):not(.embedded) > span"
+        },
+        "date_added": {
+          "selector": "td:nth-child(5):not(.embedded) > span",
+          "attribute": "title",
+          "filters": [
+            {
+              "name": "timestamp",
+              "args": [
+                "2006-01-02 15:04:05"
+              ]
+            },
+            {
+              "name": "timezone",
+              "args": [
+                "-8"
               ]
             }
           ]
